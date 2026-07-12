@@ -48,8 +48,11 @@ disponíveis; ausente ou renomeada → trate como não instalada (fallback) e re
 ## ponytail
 
 - **Transversal:** hook always-on (nível `full` para todos os tipos — não suba para `ultra` por
-  default; a11y/validação são inegociáveis). `PONYTAIL_SUBAGENT_MATCHER` deve casar **apenas
-  subagentes de implementação** — reviewers/analyze/exploração (read-only) ficam de fora.
+  default; a11y/validação são inegociáveis). **Verificado na 4.8.4:** o hook `SubagentStart`
+  injeta em **todos** os subagentes quando o modo está ativo — o `PONYTAIL_SUBAGENT_MATCHER`
+  citado na análise original **não existe nesta versão**. Custo aceito (ruleset é inócuo em
+  agentes read-only, só gasta tokens); não forkar por isso. Reavaliar a cada upgrade 4.x se o
+  filtro por tipo de subagente apareceu.
 - **Review estágio 2:** rode `/ponytail-review`; a delete-list entra no relatório de qualidade
   antes do archive.
 - **Fallback (ponytail ausente):** estágio 2 roda sem delete-list, com aviso; o NFR de economia

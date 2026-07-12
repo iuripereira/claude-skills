@@ -18,6 +18,9 @@ segunda rodada = no-op relatado, nunca duplicação ou sobrescrita.
 
 - `gh auth status` ok e remote GitHub presente (`gh repo view`). Sem um dos dois → **pare e
   reporte**; não aplique nada às cegas.
+- **Rulesets exigem repo público ou GitHub Pro** (403 em repo privado no plano free). Detecte
+  cedo: `gh api repos/{owner}/{repo}/rulesets` retornou 403 → ofereça ao usuário tornar o repo
+  público, assinar Pro, ou seguir sem proteção (CI continua valendo) — a escolha é dele.
 - Invocada avulsa (brownfield) ou pelo `projeto-init` (greenfield) — o processo é o mesmo.
 
 ## Processo
@@ -58,6 +61,8 @@ Sem check de CI existente, o ruleset com `required_status_checks` bloquearia tod
 
 ### 4. Rulesets de branch protection
 Idempotência: `gh api repos/{owner}/{repo}/rulesets --jq '.[].name'` — nome já existe → no-op.
+A consulta falhou (403/404)? **Pare** — não tente o POST às cegas (403 = plano free em repo
+privado; ver pré-requisitos).
 ```bash
 gh api repos/{owner}/{repo}/rulesets --method POST --input references/infra/rulesets/main.json
 gh api repos/{owner}/{repo}/rulesets --method POST --input references/infra/rulesets/develop.json  # só completo
