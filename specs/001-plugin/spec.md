@@ -73,9 +73,6 @@ mínimo enquanto nenhum projeto downstream existe.
   implement, com o plugin instalado, antes de apagar qualquer coisa.
 - **Rename do repositório** (`claude-skills` → `sdd-iuri`) muda a URL de clone. O GitHub redireciona,
   mas README e `adapters.md` precisam citar a nova no mesmo PR.
-- **Friction observada, não bug:** renomear um termo citado em N requisitos custa N blocos MUDA
-  completos (cinco, aqui). É o preço da consolidação mecânica do archive (`cycle.md`, regra 2) —
-  funcionando como projetado. Registrado para reavaliar se o padrão se repetir.
 - **Decisão pendente para o clarify:** o `plugin.json` deve declarar as dependências
   (`superpowers`, `ponytail`, `max`) de alguma forma, ou elas continuam sendo verificação manual do
   passo 6 do `projeto-init`? Não inventei resposta.

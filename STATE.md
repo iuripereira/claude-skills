@@ -48,6 +48,16 @@
   o template mudar de forma.
 - **`Δ000` é convenção, não fase.** É o rótulo do backfill pré-ciclo no `TRUTH.md`; deltas reais
   começam em `Δ001`. Nenhum diretório `specs/000-*/` existe nem deve existir.
+- **Renomear um termo citado em N requisitos custa N blocos MUDA completos.** Observado na Δ001:
+  trocar a forma de citar as skills exigiu cinco blocos, cada um repetindo o requisito íntegro. É o
+  preço da consolidação mecânica do archive (`cycle.md`, regra 2) — o archive não infere intenção,
+  então o cenário que não for repetido se perde. Funcionando como projetado; reavaliar só se o
+  padrão se repetir em outra delta.
+- **Pendência em "Dependências e riscos" não tem gate nem destino durável.** A regra manda parquear
+  ali (`cycle.md:47`), o clarify é quem deveria resolver, mas o analyze não lê riscos e o archive
+  leva o `spec.md` para `_archive/` — onde vira histórico, não verdade. Pendência que sobrevive à
+  delta evapora. Corrigir roteando para a seção "Decisões em aberto" **deste** arquivo no archive,
+  com check no `check_cycle.py`. Candidata a Δ002.
 - **Metade do gate analyze continua humana** por design (scope creep spec×plan, violação de regra
   canônica). Não é débito a corrigir — é limite reconhecido; automatizar produziria falso negativo
   confiante.
