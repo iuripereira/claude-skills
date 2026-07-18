@@ -48,6 +48,12 @@
   o template mudar de forma.
 - **`Δ000` é convenção, não fase.** É o rótulo do backfill pré-ciclo no `TRUTH.md`; deltas reais
   começam em `Δ001`. Nenhum diretório `specs/000-*/` existe nem deve existir.
+- **Zero tags em 3 merges, contra a própria tríade de release.** A regra canônica diz "Tag = release
+  a cada merge na `main`"; os PRs #2 e #3 foram `feat` e não geraram tag. Consequência: qualquer
+  classificação de bump (MINOR/MAJOR) é decorativa enquanto não houver linha de base, e não existe
+  ponto de retorno versionado. Corrigir antes ou logo depois da Δ001 — se antes, cortar `v0.1.0`
+  cria o baseline pré-plugin. Nenhum gate percebe a violação hoje: o `analyze` checa regra canônica,
+  mas não olha estado de release.
 - **Renomear um termo citado em N requisitos custa N blocos MUDA completos.** Observado na Δ001:
   trocar a forma de citar as skills exigiu cinco blocos, cada um repetindo o requisito íntegro. É o
   preço da consolidação mecânica do archive (`cycle.md`, regra 2) — o archive não infere intenção,

@@ -64,15 +64,20 @@ mínimo enquanto nenhum projeto downstream existe.
 
 ## Dependências e riscos
 - **Breaking change de invocação.** `/spec-feature` passa a `/sdd-iuri:spec-feature` em todas as
-  cinco skills. Pela tríade de release é MAJOR (`feat!`). O custo hoje é ~10 substituições de texto
-  porque nenhum projeto downstream existe; cresce a cada projeto gerado. **A janela barata expira.**
-- **A fase de migração local é destrutiva.** Remover as cinco pastas de `~/.claude/skills` enquanto
-  a sessão depende delas. Ordem obrigatória: clonar para fora → instalar o plugin → verificar que as
-  skills respondem pelo nome novo → só então apagar. Nunca `mv` primeiro.
+  cinco skills. O custo hoje é ~10 substituições de texto porque nenhum projeto downstream existe;
+  cresce a cada projeto gerado. **A janela barata expira.** Classificar o bump exigiria antes
+  resolver o débito de release (zero tags) — registrado no `STATE.md`, fora do escopo desta delta.
+- **A migração tem ordem obrigatória, por dois motivos independentes.** (a) Converter a allowlist em
+  `.gitignore` normal **enquanto o repo ainda estiver em `~/.claude/skills/`** torna rastreáveis as
+  12 skills pessoais e de terceiros que a allowlist esconde hoje. (b) Remover as cinco pastas antigas
+  enquanto a sessão depende delas quebra o ambiente. Sequência: clonar para fora → converter o
+  `.gitignore` no clone → instalar o plugin → verificar que as skills respondem pelo nome novo → só
+  então apagar as pastas antigas. **Nunca `mv` primeiro, nunca converter in-place.**
 - **`${CLAUDE_PLUGIN_ROOT}` está verificado na documentação, não em execução.** Validar na fase
   implement, com o plugin instalado, antes de apagar qualquer coisa.
 - **Rename do repositório** (`claude-skills` → `sdd-iuri`) muda a URL de clone. O GitHub redireciona,
   mas README e `adapters.md` precisam citar a nova no mesmo PR.
-- **Decisão pendente para o clarify:** o `plugin.json` deve declarar as dependências
-  (`superpowers`, `ponytail`, `max`) de alguma forma, ou elas continuam sendo verificação manual do
-  passo 6 do `projeto-init`? Não inventei resposta.
+- **Resolvido no clarify:** o formato de plugin **não tem** campo de dependência — verificado nos
+  cinco `plugin.json` instalados (o grep por `depend|requires|peer` só bate em prosa de um campo
+  `skillInstructions`). A cobertura existente basta e não vira requisito novo: R9/RNF2 degradam a
+  fase com aviso, e o passo 6 do `projeto-init` confere na inicialização.
