@@ -1,0 +1,17 @@
+{
+  "name": "sdd-iuri",
+  "description": "Spec-Driven Development por delta specs com gates determinísticos: projeto-init, projeto-infra, spec-feature, spec-review e guarding-doc-integrity.",
+  "author": {
+    "name": "Iuri Pereira"
+  },
+  "homepage": "https://github.com/iuripereira/sdd-iuri",
+  "repository": "https://github.com/iuripereira/sdd-iuri",
+  "license": "MIT",
+  "keywords": [
+    "spec-driven-development",
+    "delta-spec",
+    "adr",
+    "conventional-commits",
+    "changelog"
+  ]
+}

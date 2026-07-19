@@ -40,8 +40,8 @@ jobs:
       - name: Selftest dos gates
         run: |
           set -e
-          python3 spec-feature/scripts/check_cycle.py --selftest
-          python3 guarding-doc-integrity/scripts/validate_integrity.py --selftest
+          python3 skills/spec-feature/scripts/check_cycle.py --selftest
+          python3 skills/guarding-doc-integrity/scripts/validate_integrity.py --selftest
       - name: Validar frontmatter dos SKILL.md
         run: |
           set -e
