@@ -48,6 +48,21 @@
   o template mudar de forma.
 - **`Δ000` é convenção, não fase.** É o rótulo do backfill pré-ciclo no `TRUTH.md`; deltas reais
   começam em `Δ001`. Nenhum diretório `specs/000-*/` existe nem deve existir.
+- **C4 tem janela cega e não tem selftest.** O check de perda de requisito compara `git diff HEAD`,
+  então rodar o gate *depois* de commitar a consolidação passa LIBERADO com requisito perdido —
+  reproduzido em 2026-07-18. Conserto: comparar contra o merge-base da branch, não `HEAD`. E as duas
+  verificações manuais do C4 (caso positivo e falso positivo) nunca entraram no `--selftest`: o check
+  mais importante é o de menor cobertura automatizada. Prioridade máxima da Δ002.
+- **A saída do `check_cycle.py` é indistinguível do `analyze.md` completo.** Mesmo formato de tabela
+  e veredito, mas o script cobre só C1–C5; os checks 3 e 5 (scope creep, regra canônica) são humanos
+  e nada prova que rodaram. Nesta sessão o script deu LIBERADO num plano que violava a regra do
+  CHANGELOG. Conserto: marcar a saída do script como parcial.
+- **O TRUTH.md (Δ000) nunca foi revisado.** Os 14 requisitos e 4 RNFs são sumarização de um passe,
+  sem validação contra as skills. É a raiz da árvore — erro ali é herdado por todo MUDA futuro, e o
+  C4 protege a integridade da consolidação, não a correção do conteúdo.
+- **Determinismo só alcança o papel.** `implement` e `review` — onde o dano real acontece — não têm
+  gate mecânico. Consciente, mas registrado: o esforço cobriu o perímetro mais barato de errar.
+- **Evidência 100% auto-referencial.** O framework nunca rodou em projeto que não seja ele mesmo.
 - **Zero tags em 3 merges, contra a própria tríade de release.** A regra canônica diz "Tag = release
   a cada merge na `main`"; os PRs #2 e #3 foram `feat` e não geraram tag. Consequência: qualquer
   classificação de bump (MINOR/MAJOR) é decorativa enquanto não houver linha de base, e não existe
