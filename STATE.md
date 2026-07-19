@@ -11,7 +11,7 @@
 - **5 skills do framework** em `skills/`, distribuídas como plugin `sdd-iuri` e invocadas sob esse
   namespace: `projeto-init`, `projeto-infra`, `spec-feature`, `spec-review`,
   `guarding-doc-integrity`. Manifesto em `.claude-plugin/plugin.json` (sem campo `version`: a tag
-  git é a fonte da verdade; vigente: `v0.2.1`).
+  git é a fonte da verdade; vigente: `v0.2.2`).
 - **2 gates determinísticos**, ambos com `--selftest` rodado no CI:
   `skills/spec-feature/scripts/check_cycle.py` (C1–C6 do ciclo) e
   `skills/guarding-doc-integrity/scripts/validate_integrity.py` (C1–C3 de espelhos). São
@@ -33,14 +33,10 @@
 
 - **Mecanizar a medição do split condicional de PR** (novo check no `check_cycle.py`, com
   selftest e MUDA no R12) quando/se a regra manual falhar numa delta real. (Δ003)
-- **Δ005 candidata — achados da revisão do TRUTH Δ000** (2026-07-19, aguardando decisão do
-  usuário): (1) ALTO: `adapters.md` não declara fallback para o review estágio 1
-  (`superpowers:requesting-code-review`) — fura a métrica do RNF2 ("toda fase com motor de
-  terceiro tem fallback nativo declarado"); proposta: conferência inline da spec contra o diff,
-  com aviso. (2) BAIXO: cenário 2 do R13 diz "só o TRUTH.md consolidado está no escopo de
-  varredura" — impreciso (a varredura cobre raiz/docs/skills; o correto é "as deltas abertas
-  ficam fora"). (3) BAIXO: métrica do RNF3 ("2ª execução = no-op relatado") conflita com o R2
-  (re-run com `CLAUDE.md` presente grava `CLAUDE.generated.md` + diff — não é no-op).
+- **Notação digitável no lugar do símbolo `Δ`** (proposta de 2026-07-19, aguardando decisão do
+  usuário): trocar `ΔNNN` por forma digitável (recomendação: `delta-NNN`) nos artefatos vivos e
+  templates; custo real no `check_cycle.py` (regex `ALVO` + fixtures). Histórico (ADRs,
+  CHANGELOG lançado, deltas arquivadas) não é reescrito.
 - **Vendoring dos scripts de gate** nos projetos gerados — a alternativa ao "rodar local" da
   ADR-0001, caso o gate no CI do projeto passe a ser requisito.
 
@@ -58,9 +54,9 @@
 - **`Δ000` é convenção, não fase.** É o rótulo do backfill pré-ciclo no `TRUTH.md`; deltas reais
   começam em `Δ001`. Nenhum diretório `specs/000-*/` existe nem deve existir.
 - **O backfill Δ000 do TRUTH.md foi revisado em 2026-07-19** (spec-review contra as skills
-  reais): dos 11 itens remanescentes com sufixo (Δ000), 8 conferem; 3 achados registrados em
-  "Decisões em aberto" (Δ005 candidata). O C4 segue protegendo só a integridade da
-  consolidação, não a correção do conteúdo.
+  reais): dos 11 itens remanescentes com sufixo (Δ000), 8 conferiam; os 3 achados foram
+  tratados na Δ005 (fallback do review estágio 1 + redações de R13/RNF3). O C4 segue
+  protegendo só a integridade da consolidação, não a correção do conteúdo.
 - **Determinismo só alcança o papel.** `implement` e `review` — onde o dano real acontece — não têm
   gate mecânico. Consciente, mas registrado: o esforço cobriu o perímetro mais barato de errar.
 - **Evidência 100% auto-referencial.** O framework nunca rodou em projeto que não seja ele mesmo.
@@ -83,6 +79,8 @@
 
 | Data (AAAA-MM-DD) | Mudança | Ref |
 |---|---|---|
+| 2026-07-19 | Δ005 arquivada: TRUTH consolidado (MUDA R13/RNF2/RNF3), `v0.2.2` cortada | #16 |
+| 2026-07-19 | Δ005 implementada: fallback do review estágio 1 declarado no `adapters.md` (fecha o furo do RNF2) | #15 |
 | 2026-07-19 | Δ004 arquivada: TRUTH consolidado (MUDA R13), `v0.2.1` cortada; revisão do backfill Δ000 concluída (3 achados → Δ005 candidata) | #14 |
 | 2026-07-19 | Δ004 implementada: excludes portáveis no `templates/deps.toml` da guarding-doc-integrity | #13 |
 | 2026-07-19 | Δ003 arquivada: TRUTH consolidado (R17), pendência de mecanização roteada, `v0.2.0` cortada | #12 |

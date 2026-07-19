@@ -1,5 +1,5 @@
 # Δ 005 — achados-revisao
-Estado: proposta · Data: 2026-07-19 · Branch: fix/005-achados-revisao
+Estado: arquivada · Data: 2026-07-19 · Branch: fix/005-achados-revisao
 
 ## Contexto (≤3 linhas)
 A revisão do backfill Δ000 (2026-07-19, STATE.md "Decisões em aberto") deixou 3 achados
