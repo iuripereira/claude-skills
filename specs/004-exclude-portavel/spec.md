@@ -27,11 +27,28 @@ R13 — valor de negócio duplicado entre arquivos é governado por manifesto e 
 
 ## Fora de escopo
 - Mudar `scan_globs` ou a lógica de `collect()` no `validate_integrity.py` — o script está
-  correto; o bug é só nos globs de exemplo do template.
+  correto; o bug é só nos globs de exemplo do template. Normalizar o `**` final dentro de
+  `collect()` foi considerado e rejeitado: o `deps.toml` da raiz já fixou a convenção
+  contrária (globs portáveis, script com semântica `pathlib` pura — magia no glob
+  surpreenderia quem conhece o padrão).
 - Detectar `**` final mecanicamente (novo check no validador) — YAGNI até reincidir.
+- Fixture nova no `--selftest` para o exclude — a lógica do script não muda; testar o
+  comportamento do `pathlib` seria testar o Python, não o framework.
 
 ## Dependências e riscos
 - O `deps.toml` deste repo (raiz) já usa a forma portável — é a referência do fix, nada a
   migrar aqui.
 - Python 3.13+ mudou o `glob`: `**` final passou a casar arquivos também. A forma `**/*.md`
   é a única com comportamento idêntico nas duas famílias — por isso o template a adota.
+
+## Clarify — relatório de ambiguidade (grill-me, modo spec)
+<!-- gate do clarify; dúvidas resolvidas por exploração do código, sem entrevista -->
+```
+Goals:        0.0   ✓ dois globs, forma-alvo e comentário definidos
+Acceptance:   0.0   ✓ cenário verificável por grep no template
+Boundaries:   0.0   ✓ fora de escopo explícito (collect(), check novo, fixture)
+Alternatives: 0.25  ✓ normalização no script considerada e rejeitada com porquê
+Assumptions:  0.25  ✓ semântica 3.12/3.13 respaldada no comentário do deps.toml da raiz
+──────────────────────────────
+Aggregate:    0.10  ✓ abaixo do limiar (0.2 spec)
+```
