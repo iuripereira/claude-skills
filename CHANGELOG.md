@@ -13,7 +13,8 @@ A versão canônica vive nas tags git `vX.Y.Z`.
 
 ### Adicionado
 - Distribuição como plugin do Claude Code: `.claude-plugin/plugin.json` e skills em `skills/`,
-  instalável por `/plugin install iuripereira/sdd-iuri`. (#5)
+  instalável por `/plugin marketplace add iuripereira/sdd-iuri` +
+  `/plugin install sdd-iuri@sdd-iuri`. (#5)
 - Step de CI que reprova caminho absoluto de máquina em `skills/` e `.github/` (RNF1 da Δ001). (#5)
 - `spec-feature/scripts/check_cycle.py` — gate determinístico do ciclo: aceite verificável (C1),
   cobertura spec↔tasks (C2), estado × localização (C3), archive sem perda (C4) e limiar do

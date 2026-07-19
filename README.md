@@ -41,8 +41,8 @@ Contratos, fallbacks e política de versões: `skills/spec-feature/references/ad
 | `/sdd-iuri:spec-review` | opcional, antes do implement | Revisão adversarial da spec/plan via grill-me — recomendada quando a spec toca segurança, dados persistentes, contrato externo ou dependência nova |
 | `/sdd-iuri:guarding-doc-integrity` | quando um valor de negócio vive em mais de um arquivo | Governança de fontes de verdade: manifesto `deps.toml` (dono → espelhos sancionados) + validador determinístico como gate pré-commit. É o executor da "regra de propagação" do `CLAUDE.md` |
 
-Os gates determinísticos do framework — `spec-feature/scripts/check_cycle.py` (ciclo) e
-`guarding-doc-integrity/scripts/validate_integrity.py` (espelhos) — rodam **local**, na fase
+Os gates determinísticos do framework — `skills/spec-feature/scripts/check_cycle.py` (ciclo) e
+`skills/guarding-doc-integrity/scripts/validate_integrity.py` (espelhos) — rodam **local**, na fase
 analyze/archive e no pré-commit. Ambos têm `--selftest` validado no CI deste repo.
 
 ## Caminho feliz (greenfield)
