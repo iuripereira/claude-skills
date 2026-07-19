@@ -12,6 +12,9 @@ A versão canônica vive nas tags git `vX.Y.Z`.
 ## [Não lançado]
 
 ### Adicionado
+- `check_cycle.py` C6: pendência aberta (`- [ ]` em "Dependências e riscos") de delta arquivada
+  é acusada até ser roteada para o `STATE.md`; convenção no template `delta-spec.md`. (Δ002)
+- Selftest do C4 com repositório git real (perda pós-commit e falso positivo de MUDA). (Δ002)
 - Distribuição como plugin do Claude Code: `.claude-plugin/plugin.json` e skills em `skills/`,
   instalável por `/plugin marketplace add iuripereira/sdd-iuri` +
   `/plugin install sdd-iuri@sdd-iuri`. (#5)
@@ -26,6 +29,10 @@ A versão canônica vive nas tags git `vX.Y.Z`.
 - Validação de TOML e execução dos `--selftest` dos gates no job `ci`.
 
 ### Mudado
+- `check_cycle.py` C4 compara o `TRUTH.md` contra o merge-base da branch com a main — sem a
+  janela cega pós-commit; fallback `HEAD` com aviso quando não há base. (Δ002)
+- A saída do `check_cycle.py` declara-se parcial: checks 3 e 5 do analyze são humanos. (Δ002)
+- Grep de portabilidade do CI cobre `$HOME/.claude/skills` e `/home/<user>/.claude/skills`. (Δ002)
 - **BREAKING:** as cinco skills passam a ser invocadas sob o namespace `sdd-iuri:`
   (ex.: `/sdd-iuri:spec-feature`). Projetos que citem os nomes antigos precisam atualizar. (#5)
 - Os scripts de gate resolvem o próprio caminho por `${CLAUDE_PLUGIN_ROOT}` em vez de
