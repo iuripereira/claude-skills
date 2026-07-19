@@ -1,5 +1,4 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "sdd-iuri",
   "description": "Spec-Driven Development por delta specs, com estados proposta → aplicada → arquivada, fonte da verdade consolidada a cada archive e gates determinísticos.",
   "owner": {
