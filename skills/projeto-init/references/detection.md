@@ -95,7 +95,7 @@ Regra prática (alinhada à matriz acima): **workspace-dados** recebe `CLAUDE.md
 domínio além do schema. **site-estatico** recebe a tríade leve, sem `testing`/`architecture`.
 
 Nos tipos com ciclo, o scaffold de specs é `specs/` + `specs/TRUTH.md` (copie o template de
-`~/.claude/skills/spec-feature/references/templates/TRUTH.md`; o template delta-spec assume o
+`${CLAUDE_PLUGIN_ROOT}/skills/spec-feature/references/templates/TRUTH.md`; o template delta-spec assume o
 papel do antigo SPEC-TEMPLATE). `docs/adrs/`, STATE, CHANGELOG e GLOSSARY seguem inalterados —
 o `plan.md` do ciclo gera ADR em `docs/adrs/` quando a decisão for durável. **Não crie**
 `docs/specs/` + `SPEC-TEMPLATE.md` nesses tipos (repos existentes com `docs/specs/` ficam como

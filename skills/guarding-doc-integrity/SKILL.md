@@ -39,7 +39,7 @@ Quando NÃO usar: repo sem docs canônicos, ou mudança que não toca arquivo ma
 Antes de QUALQUER commit que toque `.md` num repo com `deps.toml`:
 
 ```bash
-python3 ~/.claude/skills/guarding-doc-integrity/scripts/validate_integrity.py <repo>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/guarding-doc-integrity/scripts/validate_integrity.py <repo>
 ```
 
 Exit 1 = corrigir antes de commitar. Nunca commitar com FAIL; reporte o resultado (PASS/FAIL + violações) ao usuário, sem silenciar.

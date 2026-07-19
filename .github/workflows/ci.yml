@@ -37,6 +37,13 @@ jobs:
           if bad:
               print("\n".join(bad)); sys.exit(1)
           EOF
+      - name: Portabilidade (RNF1) — zero caminho absoluto de maquina
+        run: |
+          # padrao com [.] para nao casar com esta propria linha do workflow
+          if grep -rnE '~/[.]claude/skills' skills/ .github/; then
+            echo "RNF1: caminho absoluto de maquina encontrado acima"; exit 1
+          fi
+          echo "RNF1: OK"
       - name: Selftest dos gates
         run: |
           set -e
