@@ -93,13 +93,14 @@
   - DADO a saída do script QUANDO impressa ENTÃO se declara parcial — nomeia os checks mecânicos
     cobertos e avisa que os checks 3 e 5 do `analyze.md` (scope creep, regra canônica) são
     humanos e não rodaram
-- R13 (Δ004) — valor de negócio duplicado entre arquivos é governado por manifesto e validado
+- R13 (Δ005) — valor de negócio duplicado entre arquivos é governado por manifesto e validado
   por script.
   - DADO um repo com `deps.toml` QUANDO `validate_integrity.py` roda ENTÃO verifica espelhos em
     sincronia (C1), materialização fora dos sancionados (C2) e links relativos vivos (C3),
     saindo 1 em qualquer violação
   - DADO uma delta ainda aberta propondo valor novo QUANDO o validador roda ENTÃO ela não é
-    acusada — só o `TRUTH.md` consolidado está no escopo de varredura
+    acusada — as deltas abertas (`specs/NNN-*/`) ficam fora dos `scan_globs`; dentro de `specs/`,
+    só o `TRUTH.md` consolidado (e `truth/`) entra na varredura
   - DADO o `templates/deps.toml` da skill QUANDO um `exclude_globs` mira conteúdo de diretório
     ENTÃO o glob termina em `**/*.md` (nunca em `**` solto), com comentário no template
     explicando o porquê — `pathlib` ≤ 3.12 casa só diretórios num `**` final e o exclude
@@ -129,12 +130,14 @@
   - Métrica: `TRUTH.md` ≤ 800 linhas (acima disso, particiona); o analyze lê só o cabeçalho-resumo
     do plan (≤15 linhas), nunca o plano inteiro
   - Verificação: `check_cycle.py` C5; contrato de insumos em `analyze.md`
-- RNF2 (Δ000) — o ciclo degrada com aviso em vez de abortar.
+- RNF2 (Δ005) — o ciclo degrada com aviso em vez de abortar.
   - Métrica: toda fase com motor de terceiro tem fallback nativo declarado
   - Verificação: tabela de contrato em `adapters.md` — uma linha por fase, com o ponto sensível a
-    breaking change
-- RNF3 (Δ000) — idempotência defensiva: nada é sobrescrito nem migrado sem pedido.
-  - Métrica: 2ª execução de `/sdd-iuri:projeto-init` e `/sdd-iuri:projeto-infra` = no-op relatado
+    breaking change **e uma seção de fallback correspondente para cada motor da linha**
+- RNF3 (Δ005) — idempotência defensiva: nada é sobrescrito nem migrado sem pedido.
+  - Métrica: 2ª execução de `/sdd-iuri:projeto-init` e `/sdd-iuri:projeto-infra` não altera nenhum
+    arquivo versionado e relata o que pulou; artefato de comparação efêmero
+    (`CLAUDE.generated.md` + diff, conforme R2) é permitido
   - Verificação: rodar duas vezes em repo já inicializado e conferir o relatório
 - RNF4 (Δ002) — todo script de gate carrega o próprio teste, validado no CI.
   - Métrica: 100% dos scripts do framework expõem `--selftest` com fixtures; o C4 é coberto com
