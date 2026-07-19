@@ -1,4 +1,5 @@
-# CI do repo de skills: valida JSON, YAML e frontmatter dos SKILL.md.
+# CI do plugin sdd-iuri: valida JSON, TOML, YAML, frontmatter das SKILL.md,
+# portabilidade (RNF1) e os --selftest dos gates.
 # O nome do job ("ci") é o contexto exigido pelo ruleset sdd-protect-main — não renomeie.
 name: CI
 on:
@@ -37,15 +38,27 @@ jobs:
           if bad:
               print("\n".join(bad)); sys.exit(1)
           EOF
+      - name: Portabilidade (RNF1) — zero caminho absoluto de maquina
+        run: |
+          # padrao com [.] para nao casar com esta propria linha do workflow
+          if grep -rnE '~/[.]claude/skills' skills/ .github/; then
+            echo "RNF1: caminho absoluto de maquina encontrado acima"; exit 1
+          fi
+          echo "RNF1: OK"
       - name: Selftest dos gates
         run: |
           set -e
-          python3 spec-feature/scripts/check_cycle.py --selftest
-          python3 guarding-doc-integrity/scripts/validate_integrity.py --selftest
+          python3 skills/spec-feature/scripts/check_cycle.py --selftest
+          python3 skills/guarding-doc-integrity/scripts/validate_integrity.py --selftest
       - name: Validar frontmatter dos SKILL.md
         run: |
           set -e
-          for f in */SKILL.md; do
+          shopt -s nullglob
+          arquivos=(skills/*/SKILL.md)
+          # glob que nao casa era a falha silenciosa: bash passava o literal adiante
+          [ ${#arquivos[@]} -gt 0 ] || { echo "nenhuma SKILL.md em skills/"; exit 1; }
+          for f in "${arquivos[@]}"; do
             head -1 "$f" | grep -q '^---$' && grep -q '^name:' "$f" && grep -q '^description:' "$f" \
               || { echo "frontmatter inválido: $f"; exit 1; }
           done
+          echo "frontmatter OK em ${#arquivos[@]} skills"

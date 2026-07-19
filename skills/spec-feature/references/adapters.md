@@ -62,7 +62,7 @@ disponíveis; ausente ou renomeada → trate como não instalada (fallback) e re
 
 | Plugin | Versão testada | Faixa aceita | Substituibilidade |
 |---|---|---|---|
-| `max@max4c-skills` | 0.8.0 | pin na testada; upgrade manual consciente | forkável (rulesets markdown) — em último caso copiar SKILL.md para `~/.claude/skills/` e apontar este adapter |
+| `max@max4c-skills` | 0.8.0 | pin na testada; upgrade manual consciente | forkável (rulesets markdown) — em último caso copiar a SKILL.md para o diretório de skills pessoais do usuário e apontar este adapter |
 | `superpowers@claude-plugins-official` | 6.1.1 | faixa 6.x | **não forkável** — dependência real; mitigação = fallbacks acima |
 | `ponytail@ponytail` | 4.8.4 | faixa 4.x | forkável (ruleset markdown + hook simples) |
 

@@ -12,7 +12,7 @@ mesmo que o CLAUDE.md do projeto não as monte.
 ## Metade mecânica: rode o script primeiro
 
 ```bash
-python3 ~/.claude/skills/spec-feature/scripts/check_cycle.py specs/NNN-nome
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/spec-feature/scripts/check_cycle.py specs/NNN-nome
 ```
 
 Cobre os checks **1 e 2** abaixo, a verificação de archive (cycle.md, regra 6) e o limiar do
