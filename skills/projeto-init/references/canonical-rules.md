@@ -114,9 +114,14 @@ Estrutura em `docs/` (ou `.claude/`): PRD magro + pastas especializadas onde o d
   serviço correspondente **na mesma mudança**. Valor concreto duplicado em vários arquivos é
   governado pelo manifesto `deps.toml` (dono → espelhos sancionados) e validado pela skill
   `guarding-doc-integrity` como **gate pré-commit** — grep ad-hoc não é garantia, o script é.
-- **`STATE.md`** — handoff vivo (as-built) separado do PRD (to-be); reflete o estado real a cada
-  bloco de trabalho. Em conflito de merge, mantenha a **união das verdades** — nunca sobrescreva
-  progresso de outra sessão.
+- **`STATE.md`** — diário de bordo: o que está em curso **agora**, feito recente, problemas
+  atuais e próximos passos imediatos; atualizado com frequência na própria sessão, janela rolante
+  (histórico permanente = CHANGELOG + git). Em conflito de merge, mantenha a **união das
+  verdades** — nunca sobrescreva progresso de outra sessão.
+- **`DEBT.md`** — registro canônico de débito, pendências e lições, com IDs `DT-NNN` estáveis:
+  natureza, origem, data de abertura, gatilho de correção e status. Item quitado **muda de
+  status, nunca some** — a trajetória é o registro da evolução. Issue/ticket referencia o DT,
+  nunca o substitui.
 - **Documentação em camadas:** leia o `CLAUDE.md` mais próximo do que você toca; cada subpasta
   relevante tem o seu.
 ```

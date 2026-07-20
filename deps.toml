@@ -8,11 +8,12 @@
 # quando o archive o consolida no TRUTH.md.
 scan_globs = ["*.md", "docs/**/*.md", "specs/TRUTH.md", "specs/truth/*.md", "skills/**/*.md"]
 
-# Onde citar valores é legítimo: changelog, handoff vivo (o STATE.md cita
-# valores ao registrar decisões abertas), ADRs (imutáveis após Accepted) e
-# deltas arquivadas. Globs terminam em *.md, não em '**': pathlib em
-# Python <= 3.12 casa só diretórios num '**' final e o exclude viraria no-op.
-exclude_globs = ["CHANGELOG.md", "STATE.md", "docs/adrs/**/*.md", "**/_archive/**/*.md"]
+# Onde citar valores é legítimo: changelog, diário de bordo (STATE.md), registro
+# de débito (o DEBT.md cita valores ao descrever débitos e gatilhos), ADRs
+# (imutáveis após Accepted) e deltas arquivadas. Globs terminam em *.md, não em
+# '**': pathlib em Python <= 3.12 casa só diretórios num '**' final e o exclude
+# viraria no-op.
+exclude_globs = ["CHANGELOG.md", "STATE.md", "DEBT.md", "docs/adrs/**/*.md", "**/_archive/**/*.md"]
 
 # ── Limiar de particionamento do TRUTH.md ─────────────────────────────────────
 # Dono: RNF1 do TRUTH.md. Espelhos: a constante que aplica o limiar
@@ -32,9 +33,9 @@ mirrors = [
 
 # ── Limiar de tamanho de PR ───────────────────────────────────────────────────
 # Dono: a regra canônica do módulo git-workflow. 4 espelhos excede o teto de
-# 2–3 da skill — sancionados como baseline consciente do estado atual; a
-# decisão aberta sobre este limiar (STATE.md, "Decisões em aberto") é a hora
-# de enxugar os espelhos via delta, junto com o valor.
+# 2–3 da skill — sancionados como baseline consciente do estado atual; o
+# gatilho de enxugue vive no DT-002 do DEBT.md (próxima delta que toque
+# canonical-rules.md/deps.toml enxuga os espelhos junto com o valor).
 [[owner]]
 file = "skills/projeto-init/references/canonical-rules.md"
 mirrors = [

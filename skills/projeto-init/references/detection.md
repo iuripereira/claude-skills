@@ -44,8 +44,8 @@ Legenda: ✅ incluir · ⚠️ versão leve/subset · ❌ pular.
 |---|---|---|
 | release-triad · site-estatico | SemVer+tag, Keep a Changelog PT-BR, Conventional Commits | correlação commit→bump automatizada e job de CI de validação |
 | git-workflow · workspace-dados | main protegida, branch por escopo, higiene pós-merge | PR>500 linhas (dados não têm diff de código), `[skip ci]` |
-| docs-sdd · site-estatico | ADRs, STATE.md | specs/épicos, IDs RN/RNF/DEP/EPIC, regra de propagação |
-| docs-sdd · tooling | ADRs, IDs estáveis, STATE.md, doc em camadas | specs/épicos estáticos (o ciclo sdd cobre), regra de propagação (sem DATA_DICTIONARY) |
+| docs-sdd · site-estatico | ADRs, STATE.md, DEBT.md | specs/épicos, IDs RN/RNF/DEP/EPIC, regra de propagação |
+| docs-sdd · tooling | ADRs, IDs estáveis, STATE.md, DEBT.md, doc em camadas | specs/épicos estáticos (o ciclo sdd cobre), regra de propagação (sem DATA_DICTIONARY) |
 | sdd-ciclo · site-estatico | módulo inteiro | nada — mas com a linha do ciclo reduzido ativada |
 | clean-code · workspace-dados | não duplicar lógica, zero valor mágico, nomenclatura | camada de domínio/UI, vendored, lint (sem código de app) |
 | testing · tooling | co-localização, TDD (recomendado), CI valida convenções | comandos de suíte web (vitest/playwright) — cite os reais do projeto |
@@ -56,6 +56,7 @@ Legenda: ✅ incluir · ⚠️ versão leve/subset · ❌ pular.
 | i18n-format · workspace-dados | datas ISO, escape de `\$` em Markdown | a11y, helper de moeda em código (não há app) |
 | CHANGELOG · site-estatico | arquivo criado, categorias PT-BR | exigência de CI validando changelog |
 | `docs/adrs/` · site-estatico e tooling | diretório + ADR-TEMPLATE.md completos | nada (⚠️ = criar só quando houver 1ª decisão durável é aceitável se o usuário preferir) |
+| `DEBT.md` · site-estatico e tooling | arquivo completo do template | nada (⚠️ = criar só no 1º débito/pendência é aceitável se o usuário preferir) |
 | `specs/`+TRUTH.md · site-estatico | estrutura criada; ciclo reduzido | analyze/clarify por default |
 | GLOSSARY · site-estatico e workspace-dados | criar **só** se houver termos de domínio além do óbvio/schema | criação incondicional |
 
@@ -84,6 +85,7 @@ Só crie o arquivo se **não existir** (nunca sobrescreva — ver SKILL.md).
 | `STATE.md` | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `.gitignore` (append secrets/PII) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `docs/adrs/` + `ADR-TEMPLATE.md` | ✅ | ✅ | ⚠️ | ❌ | ⚠️ |
+| `DEBT.md` (espelha a linha de `docs/adrs/`) | ✅ | ✅ | ⚠️ | ❌ | ⚠️ |
 | `specs/` + `TRUTH.md` (ciclo — substitui `docs/specs/` estático) | ✅ | ✅ | ⚠️ | ❌ | ✅ |
 | `docs/epics/` (vazio + README) | ✅ | ✅ | ❌ | ❌ | ❌ |
 | `GLOSSARY.md` | ✅ | ✅ | ⚠️ | ⚠️ | ❌ |
@@ -96,7 +98,7 @@ domínio além do schema. **site-estatico** recebe a tríade leve, sem `testing`
 
 Nos tipos com ciclo, o scaffold de specs é `specs/` + `specs/TRUTH.md` (copie o template de
 `${CLAUDE_PLUGIN_ROOT}/skills/spec-feature/references/templates/TRUTH.md`; o template delta-spec assume o
-papel do antigo SPEC-TEMPLATE). `docs/adrs/`, STATE, CHANGELOG e GLOSSARY seguem inalterados —
+papel do antigo SPEC-TEMPLATE). `docs/adrs/`, STATE, DEBT, CHANGELOG e GLOSSARY seguem inalterados —
 o `plan.md` do ciclo gera ADR em `docs/adrs/` quando a decisão for durável. **Não crie**
 `docs/specs/` + `SPEC-TEMPLATE.md` nesses tipos (repos existentes com `docs/specs/` ficam como
 estão — não migre sem pedido).
