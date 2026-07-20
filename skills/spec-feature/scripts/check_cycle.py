@@ -176,7 +176,7 @@ def c5_tamanho(root: Path, v: list) -> None:
 
 
 def c6_pendencias(root: Path, v: list) -> None:
-    """Pendência aberta (`- [ ]` em riscos) não sobrevive ao archive sem rotear pro STATE.md."""
+    """Pendência aberta (`- [ ]` em riscos) não sobrevive ao archive sem rotear pro DEBT.md."""
     for p in sorted((root / "specs" / "_archive").glob("*/spec.md")):
         m = SECAO_RISCOS.search(p.read_text(encoding="utf-8"))
         if not m:
@@ -185,7 +185,7 @@ def c6_pendencias(root: Path, v: list) -> None:
         if n:
             v.append(("ALTO", str(p.relative_to(root)),
                       f"{n} pendência(s) aberta(s) '- [ ]' em delta arquivada",
-                      "copiar para 'Decisões em aberto' do STATE.md e marcar '- [x]'"))
+                      "registrar como DT-NNN no DEBT.md (natureza: pendência) e marcar '- [x]'"))
 
 
 def checar(root: Path, delta: Path) -> list:
@@ -296,7 +296,7 @@ Estado: arquivada · Data: 2026-01-01 · Branch: feat/001-x
 ## Dependências e riscos
 - risco informativo comum, sem checkbox
 - [ ] pendência aberta: limiar de X não fechado
-- [x] pendência já roteada para o STATE.md
+- [x] pendência já roteada para o DEBT.md (DT-NNN)
 """
     with tempfile.TemporaryDirectory() as d:
         root = Path(d)
@@ -306,6 +306,7 @@ Estado: arquivada · Data: 2026-01-01 · Branch: feat/001-x
         v: list = []
         c6_pendencias(root, v)
         assert len(v) == 1 and v[0][0] == "ALTO" and "1 pendência" in v[0][2], f"C6: {v}"
+        assert "DEBT.md" in v[0][3], f"C6 deve rotear para o DEBT.md (delta-007): {v}"
 
     print("selftest: OK (3 fixtures, 6 defeitos detectados)")
     selftest_c4()

@@ -12,6 +12,11 @@ A versão canônica vive nas tags git `vX.Y.Z`.
 ## [Não lançado]
 
 ### Adicionado
+- `DEBT.md` na raiz — registro canônico de débito, pendências e lições com IDs `DT-NNN`
+  (natureza, origem, data, gatilho de correção, status; item quitado muda de status, nunca some),
+  com backfill DT-001..DT-007 e cinco lições datadas da varredura de registros. Renúncia a
+  GitHub Issues como registro: ADR-0007. Template distribuído novo no `projeto-init`
+  (`references/templates/DEBT.md`), com linha própria na matriz de scaffold. (delta-007)
 - Backfill de ADRs: cinco decisões-com-renúncia que já vigiam ganham registro Nygard — ADR-0002
   (tag git como fonte da versão), ADR-0003 (`--selftest` co-localizado), ADR-0004 (degradação
   graciosa por adapters), ADR-0005 (consolidação mecânica do archive) e ADR-0006 (perímetro dos
@@ -27,6 +32,13 @@ A versão canônica vive nas tags git `vX.Y.Z`.
   é a tabela de política de versões do `adapters.md`.
 
 ### Mudado
+- `STATE.md` deixa de acumular quatro naturezas e vira **diário de bordo** (Agora / Feito
+  recentemente / Problemas atuais / Próximos passos imediatos, janela rolante): as-built vive no
+  TRUTH/README, débito e lições no `DEBT.md`, decisões nos ADRs, histórico no CHANGELOG. Template
+  do `projeto-init` e regra canônica (docs-sdd) acompanham. (delta-007)
+- Pendência roteada no archive (R16) muda de destino: de "Decisões em aberto" do `STATE.md` para
+  `DT-NNN` no `DEBT.md` — mensagem e fixture do C6 (`check_cycle.py`), regra 7 do `cycle.md` e
+  comentário do template `delta-spec.md` atualizados juntos. (delta-007)
 - `CLAUDE.md` registra as convenções já praticadas e nunca escritas: escopo de commit da delta
   (`tipo(NNN-nome):`), tag cortada no merge que conclui a delta (o "pronto" inclui o archive) e
   merge por squash.

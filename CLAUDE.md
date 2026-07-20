@@ -71,9 +71,13 @@ Stack: Markdown (skills) + Python 3.11+ (scripts de gate) + GitHub Actions. Idio
   alternativa** precisa registrar o *porquê*.
 - **IDs estáveis e citáveis** — `Rn`/`RNFn` no `specs/TRUTH.md`, `delta-NNN` por delta, `ADR-NNNN`.
   São referenciados em vários arquivos: mantenha-os estáveis.
-- **`STATE.md`** — handoff vivo (as-built) separado do to-be; reflete o estado real a cada
-  bloco de trabalho. Em conflito de merge, mantenha a **união das verdades** — nunca sobrescreva
-  progresso de outra sessão.
+- **`STATE.md`** — diário de bordo: o que está em curso **agora**, feito recente, problemas
+  atuais e próximos passos imediatos; atualizado com frequência na própria sessão, janela rolante
+  (histórico permanente = CHANGELOG + git). Em conflito de merge, mantenha a **união das
+  verdades** — nunca sobrescreva progresso de outra sessão.
+- **`DEBT.md`** — registro canônico de débito, pendências e lições, com IDs `DT-NNN` estáveis:
+  natureza, origem, data de abertura, gatilho de correção e status. Item quitado **muda de
+  status, nunca some**. Issue/ticket referencia o DT, nunca o substitui. (ADR-0007)
 - **Documentação em camadas:** leia o `CLAUDE.md` mais próximo do que você toca; cada subpasta
   relevante tem o seu. Numa skill, a `SKILL.md` orquestra e o detalhe vive em `references/`.
 

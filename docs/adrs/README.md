@@ -17,6 +17,7 @@ documentar o que o código já diz.
 | [0004](ADR-0004-degradacao-graciosa-adapters.md) | Degradação graciosa por adapters — motores de terceiros com contrato e fallback | Accepted | 2026-07-18 |
 | [0005](ADR-0005-consolidacao-mecanica-archive.md) | Consolidação mecânica do archive — MUDA substitui integralmente | Accepted | 2026-07-18 |
 | [0006](ADR-0006-perimetro-dos-gates.md) | Perímetro dos gates determinísticos — o papel, não o implement/review | Accepted | 2026-07-18 |
+| [0007](ADR-0007-registros-com-dono.md) | Registros com dono — DEBT.md file-first; Issues não são registro | Accepted | 2026-07-19 |
 
 > ADR-0002 a 0006 são **backfill** (2026-07-19): decisões que já vigiam, registradas
 > retroativamente na varredura de registros do repo. A data de cada uma é a da decisão real.

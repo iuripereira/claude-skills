@@ -1,99 +1,33 @@
-# STATE.md — estado atual (as-built)
+# STATE.md — diário de bordo
 
-> Handoff vivo. Reflete o que o projeto **é** agora, não o que se planeja (isso vive no
-> `specs/TRUTH.md` e nas deltas). Atualize no mesmo commit de toda mudança relevante. Em conflito
-> de merge, mantenha a **união das verdades** — nunca sobrescreva o progresso de outra sessão.
+> Andamento contínuo do trabalho: o que está em curso **agora**, o que acabou de ser feito, os
+> problemas do momento e os próximos passos imediatos. Atualize com frequência dentro da própria
+> sessão. **Janela rolante:** entrada antiga sai — histórico permanente é [CHANGELOG](CHANGELOG.md)
+> + git; débito/pendência/lição é [DEBT.md](DEBT.md); decisão com renúncia é
+> [docs/adrs/](docs/adrs/); o que vige é [specs/TRUTH.md](specs/TRUTH.md). Em conflito de merge,
+> mantenha a **união das verdades** — nunca sobrescreva o progresso de outra sessão.
 
-**Atualizado em:** 2026-07-19
+**Atualizado em:** 2026-07-20
 
-## O que existe
+## Agora
+- delta-007 `registros-com-dono` em implement (branch `feat/007-registros-com-dono`): STATE.md
+  vira diário de bordo, DEBT.md nasce como registro canônico (MUDA R16), templates e gate C6
+  acompanham.
 
-- **5 skills do framework** em `skills/`, distribuídas como plugin `sdd-iuri` e invocadas sob esse
-  namespace: `projeto-init`, `projeto-infra`, `spec-feature`, `spec-review`,
-  `guarding-doc-integrity`. Manifesto em `.claude-plugin/plugin.json` (sem campo `version`: a tag
-  git é a fonte da verdade; vigente: `v0.3.0`).
-- **2 gates determinísticos**, ambos com `--selftest` rodado no CI:
-  `skills/spec-feature/scripts/check_cycle.py` (C1–C6 do ciclo) e
-  `skills/guarding-doc-integrity/scripts/validate_integrity.py` (C1–C3 de espelhos). São
-  referenciados por `${CLAUDE_PLUGIN_ROOT}`, com step de CI que reprova caminho absoluto (RNF5).
-- **Infra**: ruleset `sdd-protect-main` (PR obrigatório + check `ci` verde), workflows `ci`
-  (JSON/TOML/YAML, frontmatter, selftests, integridade documental) e `conventional-commits`.
-- **Governança de espelhos aplicada ao próprio repo**: `deps.toml` na raiz mapeia os dois
-  limiares espelhados (particionamento do TRUTH.md → dono RNF1 em `specs/TRUTH.md`; tamanho
-  de PR → dono `canonical-rules.md`), e `validate_integrity.py` roda contra o repo no job `ci`.
-- **Scaffold próprio**: este arquivo, `CLAUDE.md`, `CHANGELOG.md`, `docs/adrs/`, `specs/TRUTH.md`
-  com backfill delta-000 do que já vige.
+## Feito recentemente
+- 2026-07-19 — Higiene de registros: comandos de teste do CLAUDE.md corrigidos, convenções não
+  escritas registradas (escopo da delta, tag no archive, squash), LICENSE MIT materializada. (#19)
+- 2026-07-19 — Backfill de ADRs: ADR-0002..0006 registram as decisões-com-renúncia que vigiam sem
+  registro. (#20)
+- 2026-07-19 — Varredura completa de registros do repo + histórico #1–#18 (110 agentes, achados
+  verificados adversarialmente) → plano da reorganização aprovado.
 
-## O que falta
+## Problemas atuais
+- Nenhum bloqueio. Débito durável vive no [DEBT.md](DEBT.md) (DT-001..DT-007).
 
-- CI dos gates dentro dos projetos do usuário (ver `docs/adrs/ADR-0001`).
-- Backfill assistido de `TRUTH.md` em brownfield: existe como tarefa sob demanda, não como fase.
-
-## Decisões em aberto
-
-- **Mecanizar a medição do split condicional de PR** (novo check no `check_cycle.py`, com
-  selftest e MUDA no R12) quando/se a regra manual falhar numa delta real. (delta-003)
-- **Vendoring dos scripts de gate** nos projetos gerados — a alternativa ao "rodar local" da
-  ADR-0001, caso o gate no CI do projeto passe a ser requisito.
-
-## Pegadinhas / débito conhecido
-
-- **A allowlist do `.gitignore` cobrou seu preço ao morrer.** Enquanto existiu, `git add -A` pulava
-  em silêncio qualquer artefato novo da raiz. Na execução da delta-001 ela engoliu o
-  `.claude-plugin/plugin.json` — o commit "adiciona o manifesto" não continha o manifesto, e a
-  verificação passou porque testava o arquivo em disco, não no git. Lição que sobrevive à
-  allowlist: **verificação de "arquivo existe" deve consultar `git ls-files`, não o filesystem.**
-- **`check_cycle.py` é acoplado ao formato do `delta-spec.md`** (um requisito por bloco
-  `### Rn — VERBO`). Spec fora do template gera "nenhum bloco encontrado" (ALTO) em vez de
-  analisar — falha ruidosa, não silenciosa. Marcado com `ponytail:` no script. Corrigir quando/se
-  o template mudar de forma.
-- **`delta-000` é convenção, não fase.** É o rótulo do backfill pré-ciclo no `TRUTH.md`; deltas reais
-  começam em `delta-001`. Nenhum diretório `specs/000-*/` existe nem deve existir.
-- **A notação viva é `delta-NNN` (delta-006); o símbolo `Δ` sobrevive só como compat.** O gate
-  `check_cycle.py` aceita as duas formas de propósito — TRUTH de projetos criados em versões
-  anteriores usa `(ΔNNN)`. Por isso a regex `ALVO` e as fixtures do selftest ainda citam `Δ`:
-  é cobertura do caminho legado, não migração pendente. Histórico imutável (ADRs, `_archive/`,
-  CHANGELOG lançado, tabela abaixo) preserva o `Δ` original.
-- **O backfill delta-000 do TRUTH.md foi revisado em 2026-07-19** (spec-review contra as skills
-  reais): dos 11 itens remanescentes com sufixo (delta-000), 8 conferiam; os 3 achados foram
-  tratados na delta-005 (fallback do review estágio 1 + redações de R13/RNF3). O C4 segue
-  protegendo só a integridade da consolidação, não a correção do conteúdo.
-- **Determinismo só alcança o papel.** `implement` e `review` — onde o dano real acontece — não têm
-  gate mecânico. Consciente, mas registrado: o esforço cobriu o perímetro mais barato de errar.
-- **Evidência 100% auto-referencial.** O framework nunca rodou em projeto que não seja ele mesmo.
-- **Renomear um termo citado em N requisitos custa N blocos MUDA completos.** Observado na delta-001:
-  trocar a forma de citar as skills exigiu cinco blocos, cada um repetindo o requisito íntegro. É o
-  preço da consolidação mecânica do archive (`cycle.md`, regra 2) — o archive não infere intenção,
-  então o cenário que não for repetido se perde. Funcionando como projetado; reavaliar só se o
-  padrão se repetir em outra delta.
-- **ADR-0001 cita `~/.claude/skills/<skill>/scripts/`, caminho extinto pela delta-001.** Não corrigir:
-  ADR é imutável após Accepted e a decisão (gates rodam local) segue válida — o caminho é contexto
-  histórico. Registrado para ninguém "consertar" o ADR por engano; o grep do RNF5 deliberadamente
-  não varre `docs/`.
-- **O limiar de PR tem 4 espelhos sancionados no `deps.toml`, acima do teto de 2–3 da skill.**
-  Baseline consciente do estado atual; enxugar junto com a decisão aberta sobre o limiar.
-- **Metade do gate analyze continua humana** por design (scope creep spec×plan, violação de regra
-  canônica). Não é débito a corrigir — é limite reconhecido; automatizar produziria falso negativo
-  confiante.
-
-## Histórico de alterações
-
-| Data (AAAA-MM-DD) | Mudança | Ref |
-|---|---|---|
-| 2026-07-19 | delta-006 arquivada: notação `delta-NNN` no lugar de `Δ` (gate + docs + TRUTH); MUDA R6/R7/R12 consolidados; `v0.3.0` cortada | #18 |
-| 2026-07-19 | delta-006 implementada: gate reconhece `delta-NNN` e `Δ`, C4 mede perda por ID; migração das menções vivas | #17 |
-| 2026-07-19 | Δ005 arquivada: TRUTH consolidado (MUDA R13/RNF2/RNF3), `v0.2.2` cortada | #16 |
-| 2026-07-19 | Δ005 implementada: fallback do review estágio 1 declarado no `adapters.md` (fecha o furo do RNF2) | #15 |
-| 2026-07-19 | Δ004 arquivada: TRUTH consolidado (MUDA R13), `v0.2.1` cortada; revisão do backfill Δ000 concluída (3 achados → Δ005 candidata) | #14 |
-| 2026-07-19 | Δ004 implementada: excludes portáveis no `templates/deps.toml` da guarding-doc-integrity | #13 |
-| 2026-07-19 | Δ003 arquivada: TRUTH consolidado (R17), pendência de mecanização roteada, `v0.2.0` cortada | #12 |
-| 2026-07-19 | Δ003 implementada: split condicional do PR de delta (artefatos vs. implementação); decisão do limiar fechada — régua mantida, processo condicional | #11 |
-| 2026-07-19 | `v0.1.0` cortada: primeiro release, baseline SemVer (débito "zero tags" quitado) | #10 |
-| 2026-07-19 | `deps.toml` do repo: limiares do TRUTH e de PR com dono/espelhos; gate de integridade no `ci` | #9 |
-| 2026-07-18 | Δ002 arquivada: TRUTH consolidado (R16, MUDA R12/RNF4/RNF5), delta em `_archive/` | Δ002 |
-| 2026-07-18 | Δ002: C4 via merge-base + selftest git real, C6 de pendência, saída parcial, grep RNF5 ampliado | #7 |
-| 2026-07-18 | Δ001 arquivada: review pós-merge (2 importantes, 4 menores — tratados), TRUTH consolidado (R15, RNF5, 5 MUDA), delta em `_archive/` | Δ001 |
-| 2026-07-18 | Δ001 implementada: repo vira o plugin `sdd-iuri` — skills em `skills/`, namespace `sdd-iuri:`, `${CLAUDE_PLUGIN_ROOT}` | #5 |
-| 2026-07-18 | `projeto-init` aplicado ao próprio repo: CLAUDE.md, scaffold e TRUTH.md com backfill Δ000 | #4 |
-| 2026-07-18 | `guarding-doc-integrity` integrada ao framework; regra de propagação ganha executor | #3 |
-| 2026-07-18 | `check_cycle.py`: primeiro gate determinístico do ciclo | #2 |
+## Próximos passos imediatos
+- Fechar a delta-007: review → PR → merge → archive (consolida MUDA R16 + R18/R19 no TRUTH.md,
+  corta `v0.4.0`).
+- delta-008: skill `sdd-iuri:handoff` (própria, inspirada em mattpocock/skills, MIT).
+- Infra: exigir o check `commits` no ruleset `sdd-protect-main`; atualizar description/topics do
+  repo no GitHub.

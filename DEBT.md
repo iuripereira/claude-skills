@@ -1,0 +1,46 @@
+# DEBT.md — registro de débito, pendências e lições
+
+> Dono canônico de **débito técnico, pendências roteadas e guardas** deste repositório
+> (decisão: [ADR-0007](docs/adrs/ADR-0007-registros-com-dono.md)). IDs `DT-NNN` são globais,
+> estáveis e **nunca reutilizados**. Item quitado **muda de status, não some** — a trajetória
+> aberto→quitado é o registro da evolução. GitHub Issues podem *referenciar* um DT para
+> discussão; a fonte é sempre este arquivo. Lições (post-mortems) não têm ação pendente e
+> vivem na seção própria, datadas e com desfecho.
+
+**Naturezas:** `débito` (corrigir quando o gatilho disparar) · `pendência` (trabalho/decisão
+roteado de delta arquivada — R16) · `guarda` (aviso contra "conserto" indevido de histórico
+imutável).
+
+## Registro
+
+| ID | Natureza | Descrição | Origem | Aberto em | Gatilho de correção | Status |
+|---|---|---|---|---|---|---|
+| DT-001 | débito | Parser do `check_cycle.py` acoplado ao formato dos templates: blocos `### Rn — VERBO` no `spec.md` **e task em linha única** no `tasks.md` (task quebrada em linhas gera falso ALTO "task sem verificação") — falha ruidosa, não silenciosa | PR #2; sofrido na delta-004 | 2026-07-18 | Template mudar de forma | aberto |
+| DT-002 | débito | Limiar de PR com 4 espelhos sancionados no `deps.toml`, acima do teto de 2–3 da própria skill — baseline consciente do estado atual | PR #9 | 2026-07-19 | Próxima delta que toque `canonical-rules.md`/`deps.toml` enxuga os espelhos | aberto |
+| DT-003 | pendência | Mecanizar a medição do split condicional de PR: novo check no `check_cycle.py`, com selftest e MUDA no R12 | delta-003 | 2026-07-19 | A régua manual falhar numa delta real | aberto |
+| DT-004 | débito | Evidência 100% auto-referencial: o framework nunca rodou em projeto que não seja ele mesmo | desde o início; registrado na varredura | 2026-07-18 | Primeiro projeto real (vira também o teste do backfill brownfield) | aberto |
+| DT-005 | débito | Gate pré-commit prometido sem mecanismo: `deps.toml`, SKILL da `guarding-doc-integrity` e `canonical-rules.md` prometem validação antes de todo commit `.md`, mas não há hook algum (`.git/hooks/` vazio) — a integridade depende da diligência de sessão que a própria skill declara insuficiente | PR #3 (promessa); varredura 2026-07-19 (constatação) | 2026-07-18 | Decidir: hook real (husky/PreToolUse) ou reescrever a promessa para "gate de sessão + CI" | aberto |
+| DT-006 | guarda | ADR-0001 cita caminho extinto (`~/.claude/skills/`) e delega ao STATE.md uma "limitação conhecida" que nunca existiu lá — ADR é imutável após Accepted; **não corrigir, não migrar**; o grep do RNF5 deliberadamente não varre `docs/` | PR #6 (achado 6); varredura 2026-07-19 | 2026-07-18 | — (guarda permanente; cai se a ADR-0001 for superseded) | aberto |
+| DT-007 | débito | Janela cega residual do C4: consolidação commitada direto na `main` ou `origin/main` desatualizada escapam da comparação por merge-base | delta-002 | 2026-07-18 | Reproduzir o furo numa delta real | aberto |
+
+## Lições
+<!-- post-mortems datados, com desfecho; sem ação pendente — ação pendente é DT -->
+
+- **2026-07-18 — A allowlist do `.gitignore` cobrou seu preço ao morrer.** Enquanto existiu,
+  `git add -A` pulava em silêncio artefatos novos da raiz; na delta-001 ela engoliu o
+  `.claude-plugin/plugin.json` — o commit "adiciona o manifesto" não continha o manifesto, e a
+  verificação passou porque testava o disco, não o git. **Desfecho:** allowlist morta no #5;
+  lição vigente: *verificação de "arquivo existe" consulta `git ls-files`, não o filesystem.*
+- **2026-07-18 — Premissa de plataforma tratada como fato.** O plano da delta-001 assumiu
+  comportamento do carregador de plugins sem validar em execução; dois bugs de plano derivaram
+  disso. **Desfecho:** premissa de plataforma se valida com experimento antes de virar base de plano.
+- **2026-07-19 — O plano esquece o CHANGELOG.** Três reincidências corrigidas pelo analyze
+  (deltas 001, 004 e 005). **Desfecho:** o CHANGELOG é task explícita de toda delta; se reincidir,
+  mecanizar (candidato a check do gate).
+- **2026-07-19 — Renomear um termo citado em N requisitos custa N blocos MUDA completos.**
+  Observado na delta-001 (5 blocos) e na delta-006. **Desfecho:** é o preço da consolidação
+  mecânica ([ADR-0005](docs/adrs/ADR-0005-consolidacao-mecanica-archive.md)); o caso específico
+  de sufixo foi mitigado na delta-006 (C4 mede perda por ID).
+- **2026-07-19 — Revisão do backfill delta-000 concluída.** Contra as skills reais: 8 de 11 itens
+  conferiam; os 3 achados foram tratados na delta-005. **Desfecho:** o C4 protege a integridade da
+  consolidação, não a correção do conteúdo — revisão de conteúdo é evento, não gate.

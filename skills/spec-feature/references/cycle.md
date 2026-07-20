@@ -93,8 +93,10 @@ vigente** nele (ex.: "MUDA R2 (delta-001)").
    o C4 compara o TRUTH.md contra o merge-base da branch com a main, sem janela cega pós-commit)
    e ele acusa CRÍTICO em requisito removido que a delta não declara como alvo de MUDA/REMOVE.
 7. **Pendência roteada:** item `- [ ]` em "Dependências e riscos" do spec arquivado é pendência
-   aberta — copie-a para a seção "Decisões em aberto" do `STATE.md` e marque `- [x]`, no mesmo
-   commit da consolidação. O C6 do `check_cycle.py` acusa ALTO para `- [ ]` remanescente.
+   aberta — registre-a no `DEBT.md` como `DT-NNN` (natureza: pendência, origem: `delta-NNN`) e
+   marque `- [x]`, no mesmo commit da consolidação. Projeto sem `DEBT.md` cria o arquivo a partir
+   do template da projeto-init nesse momento. O C6 do `check_cycle.py` acusa ALTO para `- [ ]`
+   remanescente.
 
 Particionamento do TRUTH.md: acima de ~800 linhas ou ~10 domínios claros → dividir em
 `truth/<dominio>.md` e o TRUTH.md vira índice (a regra já está no template).

@@ -81,7 +81,7 @@ Tudo é **idempotência defensiva** — nada é sobrescrito nem migrado sem pedi
 frontmatter dos SKILL.md, os `--selftest` dos gates, a portabilidade dos caminhos — RNF5 — e a
 integridade documental via `deps.toml`) e commits no padrão Conventional Commits.
 
-O framework é aplicado a si mesmo: as convenções vivem no [CLAUDE.md](CLAUDE.md), o estado
-as-built no [STATE.md](STATE.md), as decisões em [docs/adrs/](docs/adrs/) e o que vige em
-[specs/TRUTH.md](specs/TRUTH.md). As skills ficam em `skills/`; o manifesto do plugin em
-`.claude-plugin/plugin.json`.
+O framework é aplicado a si mesmo: as convenções vivem no [CLAUDE.md](CLAUDE.md), o andamento no
+[STATE.md](STATE.md) (diário de bordo), o débito e as lições no [DEBT.md](DEBT.md), as decisões
+em [docs/adrs/](docs/adrs/) e o que vige em [specs/TRUTH.md](specs/TRUTH.md). As skills ficam em
+`skills/`; o manifesto do plugin em `.claude-plugin/plugin.json`.
