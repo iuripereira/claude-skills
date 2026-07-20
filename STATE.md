@@ -10,10 +10,11 @@
 **Atualizado em:** 2026-07-20
 
 ## Agora
-- Archive da delta-007 em PR; na sequência, delta-008: skill `sdd-iuri:handoff` (própria,
-  inspirada em mattpocock/skills, MIT), escrevendo neste diário e roteando débito para o DEBT.md.
+- delta-008 `skill-handoff` em implement (branch `feat/008-skill-handoff`): skill
+  `sdd-iuri:handoff` criada; contagem de skills saindo da redação viva (MUDA R15).
 
 ## Feito recentemente
+- 2026-07-20 — delta-007 arquivada (#22): MUDA R16 + R18/R19 no TRUTH.md, `v0.4.0` cortada.
 - 2026-07-20 — delta-007 implementada e mergeada (#21): DEBT.md canônico (DT-001..007 + lições),
   STATE.md vira diário de bordo, C6 roteia pendência para DT-NNN, templates e ADR-0007.
 - 2026-07-19 — Higiene de registros (#19) e backfill de ADRs 0002..0006 (#20).
@@ -24,7 +25,6 @@
 - Nenhum bloqueio. Débito durável vive no [DEBT.md](DEBT.md) (DT-001..DT-007).
 
 ## Próximos passos imediatos
-- Mergear o PR de archive da delta-007 e cortar a tag `v0.4.0`.
-- delta-008: skill `sdd-iuri:handoff`.
+- Fechar a delta-008: PR → merge → archive (consolida R20 + MUDA R15, corta `v0.5.0`).
 - Infra: exigir o check `commits` no ruleset `sdd-protect-main`; atualizar description/topics do
   repo no GitHub.

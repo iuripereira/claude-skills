@@ -1,6 +1,6 @@
 {
   "name": "sdd-iuri",
-  "description": "Spec-Driven Development por delta specs com gates determinísticos: projeto-init, projeto-infra, spec-feature, spec-review e guarding-doc-integrity.",
+  "description": "Spec-Driven Development por delta specs com gates determinísticos: projeto-init, projeto-infra, spec-feature, spec-review, guarding-doc-integrity e handoff.",
   "author": {
     "name": "Iuri Pereira"
   },

@@ -6,7 +6,7 @@
 specs, com gates determinísticos.
 Stack: Markdown (skills) + Python 3.11+ (scripts de gate) + GitHub Actions. Idioma do projeto: **PT-BR**.
 
-> **Layout.** As cinco skills vivem em `skills/<nome>/`, o manifesto em `.claude-plugin/plugin.json`,
+> **Layout.** As skills vivem em `skills/<nome>/`, o manifesto em `.claude-plugin/plugin.json`,
 > e elas são invocadas sob o namespace `sdd-iuri:`. Script do framework é referenciado por
 > `${CLAUDE_PLUGIN_ROOT}`, nunca por caminho absoluto de máquina — o job `ci` reprova o PR que
 > introduzir um.
