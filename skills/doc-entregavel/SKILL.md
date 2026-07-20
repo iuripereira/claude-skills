@@ -69,6 +69,7 @@ Distinção central (ADR-0009): documentação **interna** é viva (Mermaid inli
 | DOCX sem diagramas | pandoc gfm descarta `<img>` dentro de div HTML — no md do docx a figura é linha de imagem markdown pura |
 | Figura gigante/minúscula no docx | pandoc dimensiona pelo DPI (pHYs) do PNG — regravar o DPI para caber na página |
 | Heading seguinte "engolido" como linha da tabela de cenários/RNFs | Corrigido no `tabela_cliente.py` (linha em branco garantida + preservação do conteúdo pós-RNF); rode a versão atual |
+| Tabela de decisão dentro de item de lista (RNs do §5) vira texto com hífen literal no pdf | `deepen_indents` só aprofunda bullets, não blocos aninhados — na montagem, indente o bloco 2→4 e garanta linha em branco antes do item seguinte (achado IMEX 20-07; candidato a fix no script) |
 
 ## Arquivos da skill
 
