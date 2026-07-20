@@ -4,9 +4,10 @@ Saída parcial: os checks 3 e 5 do analyze (scope creep, regra canônica) contin
 
 Automatiza os checks 1 e 2 do analyze (references/analyze.md), o estado ×
 localização da delta, a verificação obrigatória do archive (references/cycle.md,
-regra 6), o limiar de particionamento do TRUTH.md e a pendência roteada
-(cycle.md, regra 7). Os checks 3 e 5 do analyze (scope creep spec×plan,
-violação de regra canônica) continuam com o modelo — são juízo, não regex.
+regra 6), o limiar de particionamento do TRUTH.md, a pendência roteada
+(cycle.md, regra 7) e a medição do split de PR (cycle.md, split condicional). Os
+checks 3 e 5 do analyze (scope creep spec×plan, violação de regra canônica)
+continuam com o modelo — são juízo, não regex.
 
   C1  aceite verificável — Rn com DADO/QUANDO/ENTÃO; RNFn com Métrica + Verificação
   C2  cobertura spec ↔ tasks — órfãos nos dois sentidos; task sem verificação
@@ -14,6 +15,7 @@ violação de regra canônica) continuam com o modelo — são juízo, não rege
   C4  archive sem perda — requisito sumido do TRUTH.md sem MUDA/REMOVE que o declare
   C5  tamanho do TRUTH.md — acima de 800 linhas, particionar em truth/<dominio>.md
   C6  pendência roteada — '- [ ]' em "Dependências e riscos" de delta arquivada
+  C7  split de PR — artefatos da delta acima do limiar de PR recomendam split (BAIXO)
 
 Uso: check_cycle.py [DELTA_DIR]   (default: a única delta não arquivada em ./specs)
      check_cycle.py --selftest
@@ -25,6 +27,7 @@ import sys
 from pathlib import Path
 
 TRUTH_LIMITE = 800
+PR_LIMITE = 500  # espelho da regra canônica de tamanho de PR (dono: canonical-rules.md; sancionado no deps.toml)
 ORDEM = {"CRÍTICO": 0, "ALTO": 1, "MÉDIO": 2, "BAIXO": 3}
 
 CABECALHO = re.compile(r"^###\s+(R(?:NF)?\d+)\s*[—-]\s*(ADICIONA|MUDA|REMOVE)\b(.*)$")
@@ -189,6 +192,34 @@ def c6_pendencias(root: Path, v: list) -> None:
                       "registrar como DT-NNN no DEBT.md (natureza: pendência) e marcar '- [x]'"))
 
 
+def c7_split(root: Path, delta: Path, v: list) -> None:
+    """Mede as linhas adicionadas em specs/NNN-nome/ vs merge-base; BAIXO acima do
+    limiar de PR — recomenda o split condicional (R17/cycle.md). Informa, não bloqueia
+    (BAIXO não altera o código de saída). Sem git ou sem merge-base, se omite como o C4."""
+    try:
+        rel = delta.relative_to(root)
+    except ValueError:
+        return  # delta fora do root — o diff por caminho não se aplica
+    base, com_base = base_c4(root)
+    if not com_base:
+        return  # sem merge-base com origin/main/main — medir contra HEAD enganaria; omite
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(root), "diff", base, "--numstat", "--", str(rel)],
+            capture_output=True, text=True, check=True,
+        ).stdout
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+        return  # sem git ou caminho não versionado — o check não se aplica
+    adicionadas = 0
+    for line in out.splitlines():
+        col = line.split("\t", 1)[0]
+        if col.isdigit():  # binário aparece como '-' no numstat — ignorado
+            adicionadas += int(col)
+    if adicionadas > PR_LIMITE:
+        v.append(("BAIXO", str(rel), f"{adicionadas} linhas adicionadas (limiar {PR_LIMITE})",
+                  "abrir primeiro o PR só dos artefatos — split condicional (cycle.md)"))
+
+
 def checar(root: Path, delta: Path) -> list:
     spec, tasks = delta / "spec.md", delta / "tasks.md"
     if not spec.is_file():
@@ -203,6 +234,7 @@ def checar(root: Path, delta: Path) -> list:
     c4_archive(root, bs, v)
     c5_tamanho(root, v)
     c6_pendencias(root, v)
+    c7_split(root, delta, v)
     return v
 
 
@@ -235,7 +267,7 @@ def main() -> None:
     print("|---|---|---|---|---|")
     for i, (sev, onde, o_que, acao) in enumerate(v, 1):
         print(f"| {i} | {sev} | {onde} | {o_que} | {acao} |")
-    print("\nParcial: cobre C1–C6; os checks 3 e 5 do analyze.md (scope creep, regra canônica) são juízo humano e não rodaram.")
+    print("\nParcial: cobre C1–C7; os checks 3 e 5 do analyze.md (scope creep, regra canônica) são juízo humano e não rodaram.")
     sevs = {f[0] for f in v}
     veredito = "BLOQUEADO" if "CRÍTICO" in sevs else "LIBERADO COM RESSALVAS" if v else "LIBERADO"
     print(f"\n**Veredito:** {veredito}")
@@ -311,6 +343,7 @@ Estado: arquivada · Data: 2026-01-01 · Branch: feat/001-x
 
     print("selftest: OK (3 fixtures, 6 defeitos detectados)")
     selftest_c4()
+    selftest_c7()
 
 
 def selftest_c4() -> None:
@@ -355,6 +388,49 @@ def selftest_c4() -> None:
     reescreve = rodar("- R1 (delta-000) — a\n- R2 (delta-000) — b\n")
     assert reescreve == [], f"C4 acusou reescrita de sufixo como perda: {reescreve}"
     print("selftest C4: OK (git real; perda acusada, MUDA e reescrita de sufixo liberados)")
+
+
+def selftest_c7() -> None:
+    """C7 com git real: artefato acima do limiar acusa BAIXO; abaixo, liberado."""
+    import tempfile
+
+    def rodar(n_linhas: int):
+        """Repo com base na main; delta com `n_linhas` de artefato numa branch; roda o C7."""
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+
+            def git(*args):
+                subprocess.run(["git", "-C", str(root), *args], check=True, capture_output=True)
+
+            git("init", "-q", "-b", "main")
+            git("config", "user.email", "selftest@sdd")
+            git("config", "user.name", "selftest")
+            (root / "specs").mkdir()
+            (root / "specs" / "TRUTH.md").write_text("- R1 (delta-000) — a\n", encoding="utf-8")
+            git("add", "-A")
+            git("commit", "-qm", "base")
+            git("checkout", "-qb", "feat/009-x")
+            delta = root / "specs" / "009-x"
+            delta.mkdir()
+            (delta / "spec.md").write_text("linha de artefato\n" * n_linhas, encoding="utf-8")
+            git("add", "-A")
+            git("commit", "-qm", "artefatos")
+            v: list = []
+            c7_split(root, delta, v)
+            return v
+
+    try:
+        subprocess.run(["git", "--version"], check=True, capture_output=True)
+    except (FileNotFoundError, OSError):
+        print("selftest C7: PULADO (git indisponível)")
+        return
+    # git presente: daqui em diante toda falha é ruidosa — PULADO não mascara regressão
+    grande = rodar(PR_LIMITE + 1)
+    assert any(s == "BAIXO" and "linhas adicionadas" in q for s, _, q, _ in grande), \
+        f"C7 não acusou artefato acima do limiar: {grande}"
+    pequeno = rodar(10)
+    assert pequeno == [], f"C7 acusou artefato abaixo do limiar: {pequeno}"
+    print("selftest C7: OK (git real; acima do limiar acusado, abaixo liberado)")
 
 
 if __name__ == "__main__":
