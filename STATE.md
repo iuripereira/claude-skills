@@ -5,13 +5,14 @@
 **Atualizado em:** 2026-07-20
 
 ## Agora
-- Enxugue de espelhos + sanção de valores no `deps.toml` (DT-002/DT-008) — chore fora do ciclo
-  (zero requisito alterado); gate `validate_integrity.py` verde. Em PR (`refactor/enxuga-espelhos-deps`).
+- delta-009 (`feat/009-split-pr-mecanico`) — mecaniza a régua do split de PR como **C7** no
+  `check_cycle.py` (MUDA R12, quita DT-003). Fase: implement concluído, indo para review/PR.
+  Analyze LIBERADO; selftest + `validate_integrity` verdes.
 
 ## Feito recentemente
-- 2026-07-20 — DT-002 quitado: espelhos do limiar de PR de 4→1 (`SKILL/detection/analyze.md`
-  citam "o limiar canônico"; `500` só no `CLAUDE.md`). DT-008 quitado: `deps.toml` governa
-  `15 linhas` e `10 dom`. Chore, sem tag/bump.
+- 2026-07-20 — DT-002/DT-008 quitados no #27 (mergeado): espelhos do limiar de PR de 4→1
+  (`SKILL/detection/analyze.md` citam "o limiar canônico"; `500` só no `CLAUDE.md`); `deps.toml`
+  governa `15 linhas` e `10 dom`. Chore, sem tag/bump.
 - 2026-07-20 — Formatação: quebra de linha manual removida da prosa em 27 `.md` (style, sem
   delta — mudança mecânica, zero conteúdo/requisito alterado, não cabe no template de spec).
 - 2026-07-20 — Fechamento da reorganização de registros (#25): marketplace.json, README,

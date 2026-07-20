@@ -27,7 +27,7 @@ Fim de cada fase = **commit dos artefatos na branch da delta** (regra canônica:
 
 ## PR da delta — split condicional (delta-003)
 
-O limiar de tamanho de PR (dono: regra canônica do git-workflow, no projeto-init) vale para o PR da delta — **e os artefatos do ciclo contam**. No fim do analyze (veredito LIBERADO), meça:
+O limiar de tamanho de PR (dono: regra canônica do git-workflow, no projeto-init) vale para o PR da delta — **e os artefatos do ciclo contam**. O **C7** do `check_cycle.py` mede isso no analyze e reporta BAIXO quando os artefatos passam do limiar (sem git ou sem merge-base o C7 se omite; nesse caso meça à mão):
 
 ```bash
 git diff origin/main --shortstat -- specs/NNN-nome/

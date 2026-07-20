@@ -10,7 +10,7 @@ Insumos: `spec.md`, `tasks.md`, **só o cabeçalho-resumo** do `plan.md` (o bloc
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/spec-feature/scripts/check_cycle.py specs/NNN-nome
 ```
 
-Cobre os checks **1 e 2** abaixo, a verificação de archive (cycle.md, regra 6), o limiar do TRUTH.md e a pendência roteada do archive (cycle.md, regra 7 — C6) — emite as linhas da tabela já no formato do relatório. Exit 1 = há ALTO/CRÍTICO. Os checks **3 e 5** são juízo (scope creep, regra canônica): continuam com o modelo, sempre. Diligência não substitui o script; o script não substitui a leitura.
+Cobre os checks **1 e 2** abaixo, a verificação de archive (cycle.md, regra 6), o limiar do TRUTH.md, a pendência roteada do archive (cycle.md, regra 7 — C6) e a medição do split de PR (C7, ver abaixo) — emite as linhas da tabela já no formato do relatório. Exit 1 = há ALTO/CRÍTICO. Os checks **3 e 5** são juízo (scope creep, regra canônica): continuam com o modelo, sempre. Diligência não substitui o script; o script não substitui a leitura.
 
 ## Ordem de checagem (do barato ao caro)
 
@@ -28,7 +28,7 @@ Cobre os checks **1 e 2** abaixo, a verificação de archive (cycle.md, regra 6)
 
 **Veredito:** `BLOQUEADO` somente com ≥1 CRÍTICO · `LIBERADO COM RESSALVAS` com ALTO/MÉDIO pendentes · `LIBERADO` sem achados relevantes. Ressalvas: o usuário decide seguir ou corrigir.
 
-**Saída extra com LIBERADO — forma do PR (split condicional, delta-003):** meça `git diff origin/main --shortstat -- specs/NNN-nome/` e registre o resultado no rodapé do `analyze.md`. Linhas adicionadas acima do limiar de PR da regra canônica → o ciclo abre primeiro o PR só dos artefatos (regra em cycle.md, "PR da delta — split condicional").
+**Forma do PR (split condicional, delta-003):** o **C7** do `check_cycle.py` mede as linhas adicionadas em `specs/NNN-nome/` contra o merge-base e reporta BAIXO quando passam do limiar de PR da regra canônica — não bloqueia (a medição informa; o split é decisão do ciclo). Achado do C7 → o ciclo abre primeiro o PR só dos artefatos (regra em cycle.md, "PR da delta — split condicional"). Sem git ou sem merge-base o C7 se omite; nesse caso meça à mão com `git diff origin/main --shortstat -- specs/NNN-nome/`.
 
 ## Formato do relatório (gravar em `specs/NNN-nome/analyze.md`)
 

@@ -9,6 +9,7 @@ O formato segue [Keep a Changelog 1.0.0](https://keepachangelog.com/pt-BR/1.0.0/
 ## [Não lançado]
 
 ### Adicionado
+- `check_cycle.py` ganha o **C7**: mede as linhas adicionadas em `specs/NNN-nome/` contra o merge-base e reporta BAIXO (não bloqueia) quando passam do limiar de PR, mecanizando a régua manual do split condicional (R17/DT-003). Constante `PR_LIMITE` sancionada como espelho do `500` no `deps.toml`; selftest co-localizado com git real. `analyze.md`/`cycle.md`/`SKILL.md` atualizados. (delta-009)
 - `deps.toml` passa a governar mais dois limiares antes duplicados sem sanção (DT-008): o do cabeçalho-resumo do `plan.md` (`15 linhas`, dono RNF1 do TRUTH.md; espelhos `resumo-plan.md` e `cycle.md`) e o de particionamento por domínios do TRUTH.md (`10 dom`, par do limiar de 800 linhas; espelhos `cycle.md` e `templates/TRUTH.md`) — o C1 do `validate_integrity.py` agora acusa drift entre eles.
 
 ### Mudado

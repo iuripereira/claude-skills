@@ -55,4 +55,4 @@ delta-001 **não** é "o sistema inteiro": é o walking skeleton — a menor fat
 - `references/analyze.md` — roteiro do gate de verificação cruzada + formato do relatório.
 - `references/adapters.md` — contratos de integração (max, superpowers, ponytail), fallbacks, política de versões e detecção de breaking change.
 - `references/templates/` — `delta-spec.md`, `tasks.md`, `TRUTH.md`, `resumo-plan.md`.
-- `scripts/check_cycle.py` — gate determinístico (C1 aceite · C2 cobertura · C3 estado · C4 archive sem perda · C5 tamanho do TRUTH · C6 pendência roteada). `--selftest` valida o próprio script.
+- `scripts/check_cycle.py` — gate determinístico (C1 aceite · C2 cobertura · C3 estado · C4 archive sem perda · C5 tamanho do TRUTH · C6 pendência roteada · C7 split de PR). `--selftest` valida o próprio script.

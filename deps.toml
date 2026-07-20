@@ -32,13 +32,17 @@ mirrors = [
   pattern = '\b800\b'
 
 # ── Limiar de tamanho de PR ───────────────────────────────────────────────────
-# Dono: a regra canônica do módulo git-workflow. Único espelho que materializa o
-# valor concreto é o CLAUDE.md (regras canônicas do próprio repo); SKILL.md,
-# detection.md e analyze.md passaram a citar "o limiar canônico" sem repetir o
-# número (DT-002 quitado).
+# Dono: a regra canônica do módulo git-workflow. Dois espelhos: o CLAUDE.md
+# (regras canônicas do próprio repo) e a constante PR_LIMITE do check_cycle.py,
+# que o C7 usa para medir o split. Os demais docs (SKILL.md, detection.md,
+# analyze.md) citam "o limiar canônico" sem repetir o número (DT-002). O espelho
+# .py não entra na varredura do C2 (só .md), mas o C1 o mantém em sincronia.
 [[owner]]
 file = "skills/projeto-init/references/canonical-rules.md"
-mirrors = ["CLAUDE.md"]
+mirrors = [
+  "CLAUDE.md",
+  "skills/spec-feature/scripts/check_cycle.py",
+]
 
   [[owner.value]]
   name = "pr-limiar-tamanho"
