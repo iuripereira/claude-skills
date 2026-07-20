@@ -11,6 +11,17 @@ A versão canônica vive nas tags git `vX.Y.Z`.
 
 ## [Não lançado]
 
+### Adicionado
+- Skill `sdd-iuri:handoff`: fecha a sessão nos registros com dono — atualiza o `STATE.md`
+  (diário de bordo), roteia débito/pendência/lição novo para o `DEBT.md` (DT-NNN/Lições) e cita
+  a delta em curso com fase e veredito do gate. Própria, inspirada na `handoff` de
+  mattpocock/skills (MIT), reescrita para gravar no repo em vez de brief efêmero. (delta-008)
+
+### Mudado
+- A contagem de skills sai da redação viva (R15 do TRUTH.md, `CLAUDE.md`, `README.md`) — a
+  próxima skill não exige rodada de MUDA por causa de um numeral; manifesto do plugin lista a
+  sexta skill. (delta-008)
+
 ## [0.4.0] - 2026-07-20
 
 ### Adicionado

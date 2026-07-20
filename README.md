@@ -24,7 +24,7 @@ Tudo dentro do Claude Code — não há cópia manual de arquivos:
 /plugin install max@max4c-skills                      # clarify: grill-me/grill-with-docs
 ```
 
-As cinco skills ficam sob o namespace `sdd-iuri:`. Os motores são conferidos pelo
+As skills ficam sob o namespace `sdd-iuri:`. Os motores são conferidos pelo
 `/sdd-iuri:projeto-init` na inicialização de cada projeto; faltando algum, a fase que depende dele
 degrada com aviso em vez de quebrar.
 
@@ -40,6 +40,7 @@ Contratos, fallbacks e política de versões: `skills/spec-feature/references/ad
 | `/sdd-iuri:spec-feature` | a cada incremento de feature | Orquestra o ciclo: specify → clarify → plan → tasks → analyze → implement → review → archive → PR. Cria `specs/NNN-nome/`, numeração global, branch semântica; no archive consolida o `TRUTH.md` |
 | `/sdd-iuri:spec-review` | opcional, antes do implement | Revisão adversarial da spec/plan via grill-me — recomendada quando a spec toca segurança, dados persistentes, contrato externo ou dependência nova |
 | `/sdd-iuri:guarding-doc-integrity` | quando um valor de negócio vive em mais de um arquivo | Governança de fontes de verdade: manifesto `deps.toml` (dono → espelhos sancionados) + validador determinístico como gate pré-commit. É o executor da "regra de propagação" do `CLAUDE.md` |
+| `/sdd-iuri:handoff` | ao encerrar a sessão de trabalho (argumento opcional: foco da próxima) | Fecha a sessão nos registros com dono: atualiza o `STATE.md` (diário de bordo), roteia débito/lição novo para o `DEBT.md` (DT-NNN) e cita a delta em curso com fase e gate |
 
 Os gates determinísticos do framework — `skills/spec-feature/scripts/check_cycle.py` (ciclo) e
 `skills/guarding-doc-integrity/scripts/validate_integrity.py` (espelhos) — rodam **local**, na fase
