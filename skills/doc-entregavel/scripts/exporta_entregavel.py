@@ -41,9 +41,12 @@ th, td { border: 0.5pt solid #999; padding: 3pt 5pt; text-align: left; vertical-
 code, pre { font-family: 'Courier New', monospace; font-size: 9pt; }
 pre { white-space: pre-wrap; }
 img { max-width: 100%; break-inside: avoid; }
-/* diagrama ocupa a própria página, centralizado; combine com .paisagem se for largo */
+/* diagrama ocupa a própria página, centralizado; combine com .paisagem se for largo.
+   O <p> que o md_in_html embrulha na imagem quebraria a cadeia de max-height — vira flex 100%. */
 .fig-pagina { break-before: page; break-after: page; display: flex; align-items: center;
               justify-content: center; height: 9.2in; }
+.fig-pagina > p { height: 100%; width: 100%; margin: 0; display: flex;
+                  align-items: center; justify-content: center; }
 .fig-pagina img { max-height: 100%; max-width: 100%; }
 .paisagem { page: paisagem; }
 .paisagem.fig-pagina, .paisagem .fig-pagina { height: 6.7in; }

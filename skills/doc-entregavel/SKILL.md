@@ -35,8 +35,10 @@ Distinção central (ADR-0009): documentação **interna** é viva (Mermaid inli
 
    **Regras de página (pdf):**
    - **Tabela inteira numa página** quando couber (`break-inside: avoid` já no CSS do exportador); se não couber, a quebra nunca corta uma linha ao meio e o cabeçalho repete na página seguinte (no docx, `cantSplit`/`tblHeader` aplicados pelo script).
-   - **Diagrama/fluxograma preenche a própria página**: embrulhe em `<div class="fig-pagina" markdown="1">![...](...)</div>`.
-   - **Retrato × paisagem por diagrama**: diagrama mais largo que alto → adicione a classe `paisagem` (`<div class="fig-pagina paisagem" markdown="1">`), que vira página deitada no pdf. Escolha por diagrama, olhando a proporção do SVG — legibilidade manda.
+   - **Diagrama/fluxograma preenche a própria página**: embrulhe em `<div class="fig-pagina" markdown="1">![...](...)</div>` — **só no md do pdf** (ver regra do docx abaixo).
+   - **Retrato × paisagem por diagrama**: diagrama mais largo que alto → adicione a classe `paisagem` (`<div class="fig-pagina paisagem" markdown="1">`), que vira página deitada no pdf. Escolha por diagrama, olhando a proporção do SVG — legibilidade manda. Proporção extrema (> ~3:1) fica ilegível mesmo em paisagem: re-layoute o **fonte** (ex.: `autolayout tb` em vez de `lr` no Structurizr) em vez de aceitar texto minúsculo.
+   - **SVG precisa de width/height absolutos**: o mermaid emite `width="100%"` sem tamanho intrínseco e a imagem colapsa (página em branco) ou estoura a página no print do Chrome — antes de embutir, grave width/height reais (do viewBox) no SVG.
+   - **Caminho docx: imagem como linha markdown pura**, sem o div (o pandoc gfm descarta `<img>` dentro de HTML cru — docx sai sem diagramas). PNG com **DPI (pHYs) coerente**: o pandoc dimensiona por ele; regrave o DPI para a figura caber na página (ex.: PNG 2x de um SVG de 5×8in → 288 dpi).
 
    **Prosa:** antes de congelar a baseline, rode o checklist de `skills/spec-feature/references/prosa.md` (uma regra por frase; regra combinatória em tabela de decisão; fluxo > 3 passos com diagrama + passos numerados). Entregável jurídico não comporta prosa aninhada.
 4. **Exportar** com `${CLAUDE_PLUGIN_ROOT}/skills/doc-entregavel/scripts/exporta_entregavel.py`, uma chamada por formato em `entregaveis.formato`, capa vinda de `entregaveis.capa` do perfil:
@@ -63,6 +65,10 @@ Distinção central (ADR-0009): documentação **interna** é viva (Mermaid inli
 | Tabela cortada na extremidade da página | `break-inside: avoid` + cabeçalho repetido (pdf); `cantSplit`/`tblHeader` (docx) — já no exportador; verifique no resultado |
 | Diagrama largo espremido em página retrato | `<div class="fig-pagina paisagem">` — página deitada, diagrama preenchendo a página |
 | Reaproveitar diagrama de outra categoria (ex.: C4 em Mermaid) porque já existia | A ferramenta segue a categoria (ADR-0009); migre o fonte antes do export |
+| Página em branco ou diagrama vazando por várias páginas no pdf | SVG do mermaid vem com `width="100%"` — gravar width/height absolutos (do viewBox) antes de embutir |
+| DOCX sem diagramas | pandoc gfm descarta `<img>` dentro de div HTML — no md do docx a figura é linha de imagem markdown pura |
+| Figura gigante/minúscula no docx | pandoc dimensiona pelo DPI (pHYs) do PNG — regravar o DPI para caber na página |
+| Heading seguinte "engolido" como linha da tabela de cenários/RNFs | Corrigido no `tabela_cliente.py` (linha em branco garantida + preservação do conteúdo pós-RNF); rode a versão atual |
 
 ## Arquivos da skill
 
