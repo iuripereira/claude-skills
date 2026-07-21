@@ -44,14 +44,10 @@ Os dois primeiros registram o marketplace e instalam o framework (no REPL do Cla
 /plugin install sdd-iuri@sdd-iuri
 ```
 
-O terceiro instala os motores de terceiros que o ciclo delega — lista estilo `requirements.txt`, um comando no terminal:
+O terceiro instala os motores de terceiros que o ciclo delega — um comando no terminal, que roda o [scripts/instala-motores.sh](scripts/instala-motores.sh) (com o repo clonado, chame o script direto):
 
 ```bash
-printf '%s\n' \
-  superpowers@claude-plugins-official \
-  ponytail@ponytail \
-  max@max4c-skills \
-  | xargs -n1 claude plugin install
+curl -fsSL https://raw.githubusercontent.com/iuripereira/sdd-iuri/main/scripts/instala-motores.sh | bash
 ```
 
 | Motor | O que executa no ciclo |
