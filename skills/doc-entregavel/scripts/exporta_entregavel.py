@@ -46,7 +46,8 @@ h3 { font-size: 11.5pt; color: #4F81BD; }
 /* justificado é só para o corpo — título, tabela e código ficam à esquerda */
 h1, h2, h3, h4, h5, h6, th, td, pre { text-align: left; }
 /* Sumário no formato de contrato: título ..... nº de página */
-.indice p { margin: 5pt 0; }
+/* margin-top/bottom, nunca o shorthand: `margin: 5pt 0` venceria .ind-N e zeraria a indentação */
+.indice p { margin-top: 5pt; margin-bottom: 5pt; }
 .indice a { color: #000; text-decoration: none; display: flex; align-items: baseline; }
 .indice .dots { flex: 1; overflow: hidden; white-space: nowrap; margin: 0 3pt; }
 .indice .dots::after { letter-spacing: 2pt; content: "................................................\
