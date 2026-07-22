@@ -47,7 +47,8 @@ Distinção central (ADR-0009): documentação **interna** é viva (Mermaid inli
      --titulo "<capa.titulo>" --projeto "<nome>" --versao <v> --data "<data por extenso>" \
      --anexo "<capa.anexo>" --local "<capa.local>" --assinatura "<capa.assinaturas[0]>" ...
    ```
-5. **Verificar e reportar**: abra/inspecione o resultado (tamanho > 0, diagramas presentes, capa correta) e liste os arquivos gerados. Dependências do host: `pip install pypandoc-binary python-docx markdown` (docx/pdf) e google-chrome (pdf) — ausentes, reporte o comando e pare o formato afetado, sem quebrar o outro.
+   O exportador aplica por padrão: **corpo justificado** (títulos/tabelas/código à esquerda; pdf com hifenização pt-BR) e **Índice** em página própria após a capa — no pdf gerado dos títulos h1–h3 (links internos, sem nº de página — limitação do print do Chrome), no docx como campo TOC nativo com `updateFields` (o Word preenche/atualiza ao abrir).
+5. **Verificar e reportar**: abra/inspecione o resultado (tamanho > 0, diagramas presentes, capa correta, índice presente, corpo justificado) e liste os arquivos gerados. Dependências do host: `pip install pypandoc-binary python-docx markdown` (docx/pdf) e google-chrome (pdf) — ausentes, reporte o comando e pare o formato afetado, sem quebrar o outro.
 
 ## Erros comuns
 
@@ -73,5 +74,5 @@ Distinção central (ADR-0009): documentação **interna** é viva (Mermaid inli
 
 ## Arquivos da skill
 
-- `scripts/exporta_entregavel.py` — md → docx (pypandoc + python-docx) e md → pdf (markdown → HTML+CSS → chrome headless), capa parametrizada. `--selftest` valida o próprio script.
+- `scripts/exporta_entregavel.py` — md → docx (pypandoc + python-docx) e md → pdf (markdown → HTML+CSS → chrome headless), capa parametrizada, corpo justificado e Índice automáticos. `--selftest` valida o próprio script (inclui presença do índice e justificação no docx).
 - `scripts/tabela_cliente.py` — formato cliente para PRD sdd-iuri: cenários e RNFs das seções de RF/RNF (localizadas pelo título, independentes da numeração) viram tabelas (Pré-condição · Ação · Resultado esperado; Métrica · Verificação); indentação aninhada corrigida para o caminho pdf. `--selftest` valida o próprio script.

@@ -9,6 +9,11 @@ Imagens referenciadas no markdown (`![](docs/diagrams/arquitetura.svg)`) são em
 pelos dois pipelines — renderize os diagramas do doc-profile ANTES (mmdc/dbml-renderer;
 PNG para docx, SVG ou PNG para pdf) e referencie-os no md de entrada.
 
+Formatação padrão do entregável: corpo com linhas justificadas (títulos, tabelas e
+código ficam à esquerda) e Índice logo após a capa — no pdf gerado dos títulos (links
+internos; sem nº de página, limitação do print do Chrome), no docx como campo TOC
+nativo que o Word preenche/atualiza ao abrir (updateFields).
+
 Uso:
   exporta_entregavel.py {docx|pdf} <entrada.md> <saida> \
       --titulo "Documento de Requisitos do Produto (PRD)" \
@@ -30,10 +35,15 @@ import tempfile
 CSS = '''
 @page { size: 8.5in 11in; margin: 2.2cm 2.4cm; }
 @page paisagem { size: 11in 8.5in; }
-body { font-family: Cambria, Caladea, 'Noto Serif', Georgia, serif; font-size: 10.5pt; color: #000; }
+body { font-family: Cambria, Caladea, 'Noto Serif', Georgia, serif; font-size: 10.5pt; color: #000;
+       text-align: justify; hyphens: auto; }
 h1 { font-size: 13.5pt; color: #365F91; font-weight: bold; }
 h2 { font-size: 12.5pt; color: #4F81BD; }
 h3 { font-size: 11.5pt; color: #4F81BD; }
+/* justificado é só para o corpo — título, tabela e código ficam à esquerda */
+h1, h2, h3, h4, h5, h6, th, td, pre { text-align: left; }
+.indice ul { list-style: none; padding-left: 1.2em; }
+.indice a { color: #000; text-decoration: none; }
 table { border-collapse: collapse; width: 100%; font-size: 9.5pt; break-inside: avoid; }
 tr { break-inside: avoid; }
 thead { display: table-header-group; }
@@ -68,7 +78,11 @@ def le_markdown(caminho):
 def exporta_pdf(args, md):
     import markdown
     # md_in_html: blocos <div class="paisagem"/"fig-pagina" markdown="1"> continuam processando markdown
-    corpo = markdown.markdown(md, extensions=['tables', 'fenced_code', 'sane_lists', 'md_in_html'])
+    # toc: gera o Índice a partir dos títulos (h1–h3) com âncoras clicáveis
+    mdx = markdown.Markdown(extensions=['tables', 'fenced_code', 'sane_lists', 'md_in_html', 'toc'],
+                            extension_configs={'toc': {'toc_depth': '1-3'}})
+    corpo = mdx.convert(md)
+    indice = f'<nav class="indice"><h1>Índice</h1>{mdx.toc}</nav><div class="quebra"></div>'
     assin = ''.join(f'<div class="linha"><b>{a}</b></div>' for a in args.assinatura)
     anexo = f'<p>{args.anexo}</p>' if args.anexo else ''
     local = (f'<p>{args.local}, ____ de ______________ de ____.</p>'
@@ -84,10 +98,11 @@ def exporta_pdf(args, md):
 <div class="quebra"></div>
 '''
     # <base> aponta para a pasta do md — imagens relativas resolvem de lá
+    # lang=pt-BR habilita a hifenização do Chrome (hyphens: auto) no texto justificado
     base = pathlib.Path(args.entrada).resolve().parent.as_uri() + '/'
-    html = (f"<html><head><meta charset='utf-8'><base href='{base}'>"
+    html = (f"<html lang='pt-BR'><head><meta charset='utf-8'><base href='{base}'>"
             f"<title>{args.projeto} v{args.versao}</title>"
-            f"<style>{CSS}</style></head><body>{capa}{corpo}</body></html>")
+            f"<style>{CSS}</style></head><body>{capa}{indice}{corpo}</body></html>")
     with tempfile.TemporaryDirectory() as tmp:
         h = pathlib.Path(tmp) / 'doc.html'
         h.write_text(html, encoding='utf-8')
@@ -113,6 +128,44 @@ def _tabelas_sem_corte(d):
                 tr_pr.append(tr_pr.makeelement(qn('w:tblHeader'), {}))
 
 
+def _justifica_corpo(d):
+    """Parágrafos de corpo justificados; título/código/legenda ficam como estão.
+
+    Só parágrafos de nível de documento (d.paragraphs exclui células de tabela)
+    e sem alinhamento explícito — a capa, inserida depois, define o seu próprio.
+    """
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    NAO_JUSTIFICA = ('Heading', 'Title', 'Subtitle', 'TOC', 'Caption', 'Source Code')
+    for p in d.paragraphs:
+        if p.alignment is None and not p.style.name.startswith(NAO_JUSTIFICA):
+            p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+
+
+def _campo_indice(paragrafo):
+    """Campo TOC nativo (h1–h3, hyperlinks) — o Word preenche ao abrir/F9."""
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
+    fld = OxmlElement('w:fldSimple')
+    fld.set(qn('w:instr'), r'TOC \o "1-3" \h \z \u')
+    r = OxmlElement('w:r')
+    t = OxmlElement('w:t')
+    t.text = 'Índice — abra no Word e atualize os campos (F9) para preencher.'
+    r.append(t)
+    fld.append(r)
+    paragrafo._p.append(fld)
+
+
+def _atualiza_campos_ao_abrir(d):
+    """settings.xml: updateFields=true — o Word oferece atualizar o TOC ao abrir."""
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
+    s = d.settings.element
+    if s.find(qn('w:updateFields')) is None:
+        u = OxmlElement('w:updateFields')
+        u.set(qn('w:val'), 'true')
+        s.append(u)
+
+
 def exporta_docx(args, md):
     import pypandoc
     from docx import Document
@@ -126,6 +179,7 @@ def exporta_docx(args, md):
             md, 'docx', format='gfm', outputfile=str(corpo),
             extra_args=['--resource-path', str(pathlib.Path(args.entrada).resolve().parent)])
         d = Document(str(corpo))
+        _justifica_corpo(d)
 
         linhas = [(args.titulo, 22, True, C),
                   (args.projeto, 16, True, C),
@@ -151,6 +205,16 @@ def exporta_docx(args, md):
         quebra = primeiro.insert_paragraph_before('')
         quebra.add_run().add_break(WD_BREAK.PAGE)
 
+        # Índice em página própria, entre a capa e o corpo
+        tit = primeiro.insert_paragraph_before('')
+        r = tit.add_run('Índice')
+        r.bold = True
+        r.font.size = Pt(14)
+        _campo_indice(primeiro.insert_paragraph_before(''))
+        quebra2 = primeiro.insert_paragraph_before('')
+        quebra2.add_run().add_break(WD_BREAK.PAGE)
+        _atualiza_campos_ao_abrir(d)
+
         _tabelas_sem_corte(d)
         destino = pathlib.Path(args.saida)
         destino.parent.mkdir(parents=True, exist_ok=True)
@@ -161,7 +225,7 @@ def selftest():
     """Fixture mínima md -> docx (e pdf, se houver chrome); acusa saída vazia/ausente."""
     with tempfile.TemporaryDirectory() as tmp:
         tmp = pathlib.Path(tmp)
-        (tmp / 'doc.md').write_text('# Título\n\ncorpo\n\n| a | b |\n|---|---|\n| 1 | 2 |\n',
+        (tmp / 'doc.md').write_text('# Título\n\ncorpo\n\n## Seção\n\n| a | b |\n|---|---|\n| 1 | 2 |\n',
                                     encoding='utf-8')
         base = ['--titulo', 'T', '--projeto', 'P', '--versao', '0.0', '--data', 'hoje',
                 '--local', 'X/Y', '--assinatura', 'A — CONTRATANTE']
@@ -174,6 +238,14 @@ def selftest():
             saida = tmp / f'doc.{fmt}'
             main([fmt, str(tmp / 'doc.md'), str(saida)] + base)
             assert saida.exists() and saida.stat().st_size > 0, f'{fmt}: saída vazia'
+            if fmt == 'docx':
+                from docx import Document
+                d = Document(str(saida))
+                xml = d.element.xml
+                assert 'TOC' in xml and 'Índice' in xml, 'docx: campo de índice ausente'
+                from docx.enum.text import WD_ALIGN_PARAGRAPH
+                assert any(p.alignment == WD_ALIGN_PARAGRAPH.JUSTIFY
+                           for p in d.paragraphs), 'docx: corpo não justificado'
             print(f'selftest: {fmt} OK ({saida.stat().st_size} bytes)')
     print('selftest: OK')
 
